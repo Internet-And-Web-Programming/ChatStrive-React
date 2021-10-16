@@ -1,6 +1,12 @@
 import React from "react";
 import "./Chat.css";
 import MainUser from "./contactDetails";
+// Socket establishment
+import socketIO from "socket.io-client";
+
+const ENDPOINT = "http://localhost:4500/";
+const socket = socketIO(ENDPOINT, { transports: ["websocket"] });
+
 function changeActive(Connections) {
   console.log("calling :", Connections);
 }
