@@ -1,6 +1,12 @@
 import React from "react";
+import socketIO from "socket.io-client";
+const ENDPOINT = "http://localhost:4500/";
+const socket = socketIO(ENDPOINT, { transpose: ["websocket"] });
 
-function chatApp() {
+function Chat() {
+  socket.on("connect", () => {
+    console.log("connected to server");
+  });
   return (
     <div>
       <h1>Working</h1>
@@ -8,4 +14,4 @@ function chatApp() {
   );
 }
 
-export default chatApp;
+export default Chat;
