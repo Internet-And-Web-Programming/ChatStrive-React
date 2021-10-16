@@ -3,7 +3,6 @@ import Nav from "../../0MainComponents/NavBar";
 import components from "../components";
 import "../CredentialDesign.css";
 import Validate from "../formValidation";
-import { useAuth0 } from "@auth0/auth0-react";
 
 class ElementList {
   constructor(name, link) {
@@ -27,48 +26,48 @@ function Login() {
     console.clear();
     console.log(e.target);
   }
-  const {
-    isLoading,
-    isAuthenticated,
-    user,
-    getAccessTokenSilently,
-    error,
-    loginWithRedirect,
-  } = useAuth0();
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Sorry bro... {error.message}</div>;
-  if (isAuthenticated) return console.log("Lol!!");
+  // const {
+  //   isLoading,
+  //   isAuthenticated,
+  //   user,
+  //   getAccessTokenSilently,
+  //   error,
+  //   loginWithRedirect,
+  // } = useAuth0();
+  // if (isLoading) return <div>Loading...</div>;
+  // if (error) return <div>Sorry bro... {error.message}</div>;
+  // if (isAuthenticated) return console.log("Lol!!");
 
   return (
-    !isAuthenticated && (
-      <div style={style}>
-        <Nav navElements={navBarElements} />
-        <div style={style2}>
-          <div className="box">
-            <h1>Login</h1>
-            <form name="login">
-              {components.Login.map((Login) => (
-                <div className="component">
-                  <label>{Login.name}</label>
-                  <input
-                    type={Login.type}
-                    name={Login.name}
-                    placeholder={Login.placeholder}
-                    id={Login.id}
-                    onChange={handleChange}
-                  />
-                </div>
-              ))}
-              <div className="bg">
-                <button>Login with JWT</button>
-                <button onClick={loginWithRedirect}>Login with Auth0?</button>
+    // !isAuthenticated && (
+    <div style={style}>
+      <Nav navElements={navBarElements} />
+      <div style={style2}>
+        <div className="box">
+          <h1>Login</h1>
+          <form name="login">
+            {components.Login.map((Login) => (
+              <div className="component">
+                <label>{Login.name}</label>
+                <input
+                  type={Login.type}
+                  name={Login.name}
+                  placeholder={Login.placeholder}
+                  id={Login.id}
+                  onChange={handleChange}
+                />
               </div>
-            </form>
-            <p>{name}</p>
-          </div>
+            ))}
+            <div className="bg">
+              <button>Login with JWT</button>
+              {/* <button onClick={loginWithRedirect}>Login with Auth0?</button> */}
+            </div>
+          </form>
+          <p>{name}</p>
         </div>
       </div>
-    )
+    </div>
+    // )
   );
 }
 
