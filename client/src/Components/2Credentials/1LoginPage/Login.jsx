@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Nav from "../../0MainComponents/NavBar";
 import components from "../components";
 import "../CredentialDesign.css";
 import Validate from "../formValidation";
 import { useAuth0 } from "@auth0/auth0-react";
-// import { Chat } from "../../4MainChattingWindow/Chat";
 
 class ElementList {
   constructor(name, link) {
