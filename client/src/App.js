@@ -2,6 +2,8 @@ import React from "react";
 import Register from "./components/Register/Register";
 import Chat from "./components/Chat/chatApp";
 import Home from "./components/Home/Home";
+import NewRegister from "./components/Register/NewRegister";
+import ContactUs from "./components/ContactUs/ContactUs";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { lightTheme, darkTheme, GlobalStyles } from "./Theme";
 import { useState } from "react";
@@ -31,8 +33,10 @@ function App() {
         <StyledApp>
           <Router>
             <Route exact path="/" component={Home} />
-            <Route exact path="/register" component={Register} />
+            <Route exact path="/Register" component={Register} />
             <Route exact path="/chat" component={Chat} />
+            <Route exact path="/NewRegister" component={NewRegister} />
+            <Route exact path="/ContactUs" component={ContactUs} />
           </Router>
         </StyledApp>
       </ThemeProvider>

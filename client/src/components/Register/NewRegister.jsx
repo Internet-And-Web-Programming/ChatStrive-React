@@ -1,23 +1,23 @@
 import React, { useState } from "react";
 import Nav from "../Navigation/NavBar";
+import { Link } from "react-router-dom";
 import Validate from "./formValidation";
 import components from "./components";
 import "./reg.css";
-
 class ElementList {
   constructor(name, link) {
     this.name = name;
     this.link = link;
   }
 }
+
 // List of elements to be displayed in the nav bar
 const navBarElements = [
   new ElementList("Home", "/"),
-  new ElementList("Signin", "/NewRegister"),
+  new ElementList("Login", "/Register"),
   new ElementList("ContactUs", "/ContactUs"),
 ];
-
-function Register() {
+function NewRegister() {
   const [name, changeName] = useState("");
   function handleChange(e) {
     e.preventDefault();
@@ -30,30 +30,36 @@ function Register() {
       <Nav navElements={navBarElements} />
       <div style={style2}>
         <div className="box">
-          <h1>Login</h1>
-          <form name="login">
-            {components.Login.map((Login) => (
+          <h1>Sign In</h1>
+          <form name="signup">
+            {components.Signin.map((Signin) => (
               <div className="component">
-                <label>{Login.name}</label>
+                <label>{Signin.name}</label>
                 <input
-                  type={Login.type}
-                  name={Login.name}
-                  placeholder={Login.placeholder}
-                  id={Login.id}
+                  type={Signin.type}
+                  name={Signin.name}
+                  placeholder={Signin.placeholder}
+                  id={Signin.id}
                   onChange={handleChange}
                 />
               </div>
             ))}
             <div className="bg">
-              <button>Login with JWT</button>
-              {/* <button onClick={loginWithRedirect}>Login with Auth0?</button> */}
+              <button>
+                <a href="/Login">Sign In</a>
+              </button>
             </div>
+            <p>
+              {components.SigninDrama.content}
+              <Link to={components.SigninDrama.a}>
+                {components.SigninDrama.link}
+              </Link>
+            </p>
           </form>
-          <p>{name}</p>
+          <p style={style3}>{name}</p>
         </div>
       </div>
     </div>
-    // )
   );
 }
 
@@ -83,4 +89,10 @@ const style2 = {
   width: "100%",
 };
 
-export default Register;
+const style3 = {
+  FontFace: "Arial",
+  fontSize: "larger",
+  padding: "10px",
+};
+
+export default NewRegister;

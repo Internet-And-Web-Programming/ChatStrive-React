@@ -7,8 +7,8 @@ import Login from "./Components/2Credentials/1LoginPage/Login";
 import Signup from "./Components/2Credentials/2SignUpPage/Signin";
 import Chat from "./Components/4MainChattingWindow/Chat";
 import ContactUs from "./Components/5QueryPage/Query";
-const StyledApp = styled.div``;
 
+const StyledApp = styled.div``;
 const positioning = {
   height: "100%",
 };
@@ -47,7 +47,6 @@ function App() {
               <Route exact path="/Chat" component={Chat} />
               <Route exact path="/ContactUs" component={ContactUs} />
               {/* <Route path = "/" component ={}/> */}
-              {/* Incase of adding new windows in the system*/}
             </Switch>
           </BrowserRouter>
         </StyledApp>
