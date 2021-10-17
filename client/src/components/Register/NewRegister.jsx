@@ -17,7 +17,24 @@ const navBarElements = [
   new ElementList("Login", "/Register"),
   new ElementList("ContactUs", "/ContactUs"),
 ];
+let UserDetails = [];
 function NewRegister() {
+  let user = {};
+
+  const sendUserDetails = () => {
+    var form = document.forms[0].elements;
+    console.clear();
+    console.log(form);
+    for (var i = 0; i < form.length - 1; i++) {
+      user.key = form[i].name;
+      user.value = form[i].value;
+      UserDetails.push(user);
+      user = {};
+    }
+
+    console.log(UserDetails);
+  };
+
   const [name, changeName] = useState("");
   function handleChange(e) {
     e.preventDefault();
@@ -45,8 +62,8 @@ function NewRegister() {
               </div>
             ))}
             <div className="bg">
-              <button>
-                <a href="/Login">Sign In</a>
+              <button onClick={sendUserDetails}>
+                <Link to="/Register">Sign In</Link>
               </button>
             </div>
             <p>
@@ -96,3 +113,4 @@ const style3 = {
 };
 
 export default NewRegister;
+export { UserDetails };

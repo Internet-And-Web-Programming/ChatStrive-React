@@ -22,8 +22,6 @@ function Register() {
   function handleChange(e) {
     e.preventDefault();
     changeName(Validate(e.target));
-    console.clear();
-    console.log(e.target);
   }
   return (
     <div style={style}>

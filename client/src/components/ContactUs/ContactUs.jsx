@@ -10,8 +10,8 @@ class ElementList {
 // List of elements to be displayed in the nav bar
 const navBarElements = [
   new ElementList("Home", "/"),
-  new ElementList("Login", "/Login"),
-  new ElementList("Signin", "/Signin"),
+  new ElementList("Login", "/Register"),
+  new ElementList("Signin", "/NewRegister"),
 ];
 //Styling for the main component
 const style = {

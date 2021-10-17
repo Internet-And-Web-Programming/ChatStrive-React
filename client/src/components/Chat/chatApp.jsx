@@ -4,9 +4,7 @@ const ENDPOINT = "http://localhost:4500/";
 const socket = socketIO(ENDPOINT, { transpose: ["websocket"] });
 
 function Chat() {
-  socket.on("connect", () => {
-    console.log("connected to server");
-  });
+  socket.on("connect", () => {});
   return (
     <div>
       <h1>Working</h1>
