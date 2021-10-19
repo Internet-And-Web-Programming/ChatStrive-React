@@ -19,6 +19,7 @@ const navBarElements = [
 ];
 let UserDetails = [];
 function NewRegister() {
+  console.clear();
   let user = {};
 
   const sendUserDetails = () => {

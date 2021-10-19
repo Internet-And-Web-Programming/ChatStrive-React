@@ -4,7 +4,7 @@ import Chat from "./components/Chat/chatApp";
 import Home from "./components/Home/Home";
 import NewRegister from "./components/Register/NewRegister";
 import ContactUs from "./components/ContactUs/ContactUs";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import { lightTheme, darkTheme, GlobalStyles } from "./Theme";
 import { useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
@@ -12,13 +12,13 @@ import "./App.css";
 function App() {
   const [theme, setTheme] = useState("light");
 
-  const changeTheme = () => {
-    if (theme === "light") {
-      setTheme("dark");
-    } else {
-      setTheme("light");
-    }
-  };
+  // const changeTheme = () => {
+  //   if (theme === "light") {
+  //     setTheme("dark");
+  //   } else {
+  //     setTheme("light");
+  //   }
+  // };
 
   const StyledApp = styled.div``;
 

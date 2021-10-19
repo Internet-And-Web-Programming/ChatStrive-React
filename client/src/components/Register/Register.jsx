@@ -3,7 +3,8 @@ import Nav from "../Navigation/NavBar";
 import Validate from "./formValidation";
 import components from "./components";
 import "./reg.css";
-
+import { Link } from "react-router-dom";
+import { UserDetails } from "./NewRegister";
 class ElementList {
   constructor(name, link) {
     this.name = name;
@@ -18,11 +19,39 @@ const navBarElements = [
 ];
 
 function Register() {
+  console.clear();
+  console.log("These are the user details", UserDetails);
   const [name, changeName] = useState("");
   function handleChange(e) {
     e.preventDefault();
     changeName(Validate(e.target));
   }
+
+  const verify = () => {
+    let forms = document.forms[0].elements;
+    console.clear();
+    console.log(forms);
+  };
+  const eve = (event) => {
+    let forms = document.forms[0].elements;
+    var check = true;
+    for (let i = 0; i < forms.length - 1; i++) {
+      console.log(forms[i].value);
+      if (forms[i].value === "") {
+        check = false;
+      }
+    }
+    if (name !== "") {
+      check = false;
+      alert("Please fill the details properly");
+    }
+    if (!check) {
+      console.log("Please fill all the fields");
+      event.preventDefault();
+    } else {
+      verify();
+    }
+  };
   return (
     <div style={style}>
       <Nav navElements={navBarElements} />
@@ -43,7 +72,9 @@ function Register() {
               </div>
             ))}
             <div className="bg">
-              <button>Login with JWT</button>
+              <Link to="/Chat" onClick={eve}>
+                <button>Login with JWT</button>
+              </Link>
               {/* <button onClick={loginWithRedirect}>Login with Auth0?</button> */}
             </div>
           </form>

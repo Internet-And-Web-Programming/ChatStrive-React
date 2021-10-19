@@ -15,6 +15,7 @@ const navBarElements = [
 ];
 
 function Home() {
+  console.clear();
   return (
     <>
       <Nav navElements={navBarElements} />

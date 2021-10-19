@@ -39,6 +39,7 @@ const style2 = {
 };
 
 function ContactUs() {
+  console.clear();
   return (
     <div style={style}>
       <Nav navElements={navBarElements} />
