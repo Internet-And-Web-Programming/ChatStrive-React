@@ -11,6 +11,13 @@ class ElementList {
     this.link = link;
   }
 }
+
+let User = [];
+function setUserValues(Username) {
+  User.push(Username);
+  console.log("User is ", User);
+}
+
 // List of elements to be displayed in the nav bar
 const navBarElements = [
   new ElementList("Home", "/"),
@@ -19,24 +26,20 @@ const navBarElements = [
 ];
 
 function Register() {
-  console.clear();
-  console.log("These are the user details", UserDetails);
+  // console.log("These are the user details", UserDetails);
   const [name, changeName] = useState("");
   function handleChange(e) {
     e.preventDefault();
     changeName(Validate(e.target));
   }
 
-  const verify = () => {
-    let forms = document.forms[0].elements;
-    console.clear();
-    console.log(forms);
+  const verify = (forms) => {
+    setUserValues(forms);
   };
   const eve = (event) => {
     let forms = document.forms[0].elements;
     var check = true;
     for (let i = 0; i < forms.length - 1; i++) {
-      console.log(forms[i].value);
       if (forms[i].value === "") {
         check = false;
       }
@@ -49,7 +52,7 @@ function Register() {
       console.log("Please fill all the fields");
       event.preventDefault();
     } else {
-      verify();
+      verify(forms[0].value);
     }
   };
   return (
@@ -73,9 +76,8 @@ function Register() {
             ))}
             <div className="bg">
               <Link to="/Chat" onClick={eve}>
-                <button>Login with JWT</button>
+                <button>Login</button>
               </Link>
-              {/* <button onClick={loginWithRedirect}>Login with Auth0?</button> */}
             </div>
           </form>
           <p>{name}</p>
@@ -113,3 +115,4 @@ const style2 = {
 };
 
 export default Register;
+export { User };
