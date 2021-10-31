@@ -14,7 +14,9 @@ function Chat() {
       console.clear();
       console.warn("socket connected");
     });
+    socket.emit("join", { User });
   }, [socket]);
+
   return (
     <>
       <div className="ChattingPage">

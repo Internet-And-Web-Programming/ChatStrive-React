@@ -14,6 +14,7 @@ class ElementList {
 
 let User = [];
 function setUserValues(Username) {
+  User = [];
   User.push(Username);
   console.log("User is ", User);
 }

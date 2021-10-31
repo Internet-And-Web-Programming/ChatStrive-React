@@ -12,8 +12,11 @@ const server = http.createServer(app);
 const io = socketIO(server);
 app.use(cors());
 
-io.on("connection", () => {
+io.on("connection", (socket) => {
   console.log("New user connected");
+  socket.on("join", (data) => {
+    console.log(data);
+  });
 });
 
 server.listen(port, () => {
