@@ -2,7 +2,7 @@ import React from "react";
 import socketIO from "socket.io-client";
 import { useEffect } from "react";
 import { User } from "../Register/Register";
-
+import "./chatApp.css";
 const ENDPOINT = "http://localhost:4500/";
 function Chat() {
   const socket = socketIO(ENDPOINT, {
