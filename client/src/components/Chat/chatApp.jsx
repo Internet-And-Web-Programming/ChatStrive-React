@@ -21,11 +21,11 @@ function Chat() {
     <>
       <div className="ChattingPage">
         <div className="userPanel">
-          <div className="Header">{User}</div>
+          <div className="Header">{User[0]}</div>
           <div className="mainWindow"></div>
         </div>
-        <div className="massageWindow">
-          <div className="Header"></div>
+        <div className="messageWindow">
+          <div className="Header">{User[0]}</div>
           <div className="mainWindow"></div>
           <div className="textingInput">
             <input type="text" placeholder="Type your message" />

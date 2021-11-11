@@ -14,7 +14,6 @@ class ElementList {
 
 let User = [];
 function setUserValues(Username) {
-  User = [];
   User.push(Username);
   console.log("User is ", User);
 }
@@ -53,7 +52,9 @@ function Register() {
       console.log("Please fill all the fields");
       event.preventDefault();
     } else {
-      verify(forms[0].value);
+      for (let i = 0; i < forms.length - 1; i++) {
+        verify(forms[i].value);
+      }
     }
   };
   return (

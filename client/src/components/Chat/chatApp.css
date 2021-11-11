@@ -1,0 +1,78 @@
+:root {
+  --bodybglight: #ffffff;
+  --formbglight: #e5e5e5;
+  --bodybgdark: #000124;
+  --formbgdark: #37384a;
+  --chatbodydark: #8a56bb;
+  --messagebg: #8a5e95;
+  --usrBar: #9e7bbe;
+  --fontcolor: #b6b6b6;
+}
+
+.ChattingPage {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+.userPanel {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  background-color: var(--chatbodydark);
+}
+.userPanel .mainWindow {
+  /* Left part */
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  background-color: var(--usrBar);
+  overflow-y: scroll;
+}
+
+.messageWindow {
+  display: flex;
+  flex: 2;
+  flex-direction: column;
+}
+.messageWindow .mainWindow {
+  /* Right part */
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  background-color: var(--messagebg);
+  overflow-y: scroll;
+}
+
+.Header {
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--chatbodydark);
+  color: var(--fontcolor);
+  font-weight: 600;
+  font-size: 1.3em;
+}
+
+.messageWindow .Header {
+  justify-content: flex-start;
+  padding-left: 20px;
+}
+
+.textingInput {
+  display: flex;
+  background-color: var(--chatbodydark);
+}
+
+.textingInput input {
+  flex: 1;
+  font-size: 20px;
+}
+
+.textingInput button {
+  padding: 5px;
+  margin: 5px;
+  margin-left: 0px;
+  border-radius: 5px;
+}
