@@ -25,6 +25,12 @@ function operate() {
 //   chatWindow.appendChild(newMessage);
 // }
 
+function add_user() {
+  let newuser = document.createElement('li')
+  newuser.innerHTML = "New Contact"
+  document.getElementById('Contacts').append(newuser)
+}
+
 function Chat() {
   useEffect(() => {
     socket.on(() => {
@@ -42,9 +48,14 @@ function Chat() {
     <>
       <div className="ChattingPage">
         <div className="userPanel">
-          <div className="Header">{User[0]}</div>
+          <div className="Header">{User[0]}'s Contacts
+          <input type="text" placeholder="Search Contacts.." />
+          <button type="button" onClick={add_user}>addnew</button>
+          </div>
           <div className="mainWindow">
-            <div className="message"></div>
+            <ul id="Contacts">
+              <li id="base">sample contact</li>
+            </ul>
           </div>
         </div>
         <div className="messageWindow">

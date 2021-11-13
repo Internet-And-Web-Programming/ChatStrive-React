@@ -9,6 +9,10 @@
   --fontcolor: #b6b6b6;
 }
 
+body{
+  overflow-y: hidden;
+}
+
 .ChattingPage {
   display: flex;
   height: 100vh;
@@ -47,12 +51,33 @@
 .Header {
   min-height: 50px;
   display: flex;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   background-color: var(--chatbodydark);
   color: var(--fontcolor);
   font-weight: 600;
   font-size: 1.3em;
+}
+
+.Header button {
+  max-height: 30px;
+}
+
+.mainWindow ul{
+  display: flex;
+  max-height: 100vh;
+  flex-direction: column;
+  /*overflow-y: scroll;*/
+}
+
+.mainWindow ul li{
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--usrBar);
+  border-bottom: 1px solid black;
 }
 
 .messageWindow .Header {
