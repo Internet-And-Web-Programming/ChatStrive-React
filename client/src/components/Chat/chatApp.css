@@ -101,3 +101,29 @@ body{
   margin-left: 0px;
   border-radius: 5px;
 }
+
+.message{
+  background-color: aqua;
+  display: flex;
+  flex-direction: column;
+  font-size: 20px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  width: fit-content;
+  max-width: 30%;
+  margin-left: 2%;
+  margin-top: 2%;
+  padding: 5px;
+  padding-top: 10px;
+  padding-bottom: 0px;
+  border-radius: 5px;
+}
+
+.messageFooter{
+  display: flex;
+  font-size: small;
+  padding-top: 2px;
+  flex-direction: row;
+  justify-content: space-between;
+  min-width: 10%;
+}

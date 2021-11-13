@@ -14,6 +14,7 @@ function operate() {
   console.clear();
   console.log(msg);
   socket.emit("sendMessage", { msg });
+  add_sentMessage(msg)
   // Add the message to the chat window
   // addMessage(msg);
 }
@@ -29,6 +30,17 @@ function add_user() {
   let newuser = document.createElement('li')
   newuser.innerHTML = "New Contact"
   document.getElementById('Contacts').append(newuser)
+}
+
+function add_sentMessage(message) {
+  let newsent = document.createElement('div')
+  newsent.className = "message" 
+  newsent.innerHTML = document.getElementById('message').innerHTML
+  newsent.innerHTML = message
+  let messfoot = document.getElementById('Footercontainer')
+  newsent.innerHTML += messfoot.innerHTML
+  document.getElementById('mainWindow').append(newsent)
+
 }
 
 function Chat() {
@@ -60,7 +72,17 @@ function Chat() {
         </div>
         <div className="messageWindow">
           <div className="Header">{User[0]}</div>
-          <div className="mainWindow"></div>
+          <div className="mainWindow" id="mainWindow">
+            <div className="message" id="message">
+              <span id="mainMessage">This is a sample message sent by the user oh no but it is very long what should i do if it flows out of bounds ?, Don't worry you got the flex man to save the day</span>
+            <div id="Footercontainer">
+            <div className="messageFooter">
+              <span>Date-Time</span>
+              <span>dileverystatus</span>
+              </div>
+              </div>
+              </div>
+          </div>
           <div className="textingInput">
             <input type="text" placeholder="Type your message" />
             <button onClick={operate}>Send</button>
