@@ -18,7 +18,7 @@ app.use(cors());
 
 io.on("connection", (socket) => {
   console.log("New user connected");
-  socket.on("join", (data) => {
+  socket.on("register", (data) => {
     users[socket.id] = data;
     console.clear();
     console.log(users);

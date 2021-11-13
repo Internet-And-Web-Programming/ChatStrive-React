@@ -10,6 +10,8 @@ export class Connection extends Component {
   constructor() {
     super();
     this.socket = socket;
+  }
+  on() {
     this.socket.on(() => {
       console.log("connected");
     });
@@ -17,9 +19,12 @@ export class Connection extends Component {
   emit(ID, data) {
     this.socket.emit(ID, data);
   }
-  recieve(ID, callback) {
-    this.socket.on(ID, callback);
-    return callback;
+  // recieve(ID, callback) {
+  //   this.socket.on(ID, callback);
+  //   return callback;
+  // }
+  self() {
+    return this.socket;
   }
 }
 

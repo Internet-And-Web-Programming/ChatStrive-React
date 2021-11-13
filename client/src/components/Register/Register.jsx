@@ -1,20 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Nav from "../Navigation/NavBar";
 import Validate from "./formValidation";
 import components from "./components";
 import "./reg.css";
 import { Link } from "react-router-dom";
 import { UserDetails } from "./NewRegister";
+import { Connection } from "../SocketConnection/Connection";
+import SHA256 from "crypto-js/sha256";
+
+let conn = new Connection();
+
 class ElementList {
   constructor(name, link) {
     this.name = name;
     this.link = link;
   }
 }
-
 let User = [];
-function setUserValues(Username) {
-  User.push(Username);
+function setUserValues(value) {
+  if (User.length === 1) {
+    value = SHA256(value).toString();
+  }
+  if (User.length === 2) {
+    User.pop();
+    User.pop();
+  }
+  User.push(value);
   console.log("User is ", User);
 }
 
@@ -25,6 +36,7 @@ const navBarElements = [
   new ElementList("ContactUs", "/ContactUs"),
 ];
 
+// Main function of this file
 function Register() {
   // console.log("These are the user details", UserDetails);
   const [name, changeName] = useState("");
@@ -55,8 +67,16 @@ function Register() {
       for (let i = 0; i < forms.length - 1; i++) {
         verify(forms[i].value);
       }
+      conn.emit("register", User);
     }
   };
+  // Sending the data to the server using socket
+
+  useEffect(() => {
+    conn.on();
+    
+  }, [conn.self]);
+
   return (
     <div style={style}>
       <Nav navElements={navBarElements} />

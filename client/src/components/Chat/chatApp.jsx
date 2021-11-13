@@ -26,9 +26,9 @@ function operate() {
 // }
 
 function add_user() {
-  let newuser = document.createElement('li')
-  newuser.innerHTML = "New Contact"
-  document.getElementById('Contacts').append(newuser)
+  let newuser = document.createElement("li");
+  newuser.innerHTML = "New Contact";
+  document.getElementById("Contacts").append(newuser);
 }
 
 function Chat() {
@@ -48,9 +48,12 @@ function Chat() {
     <>
       <div className="ChattingPage">
         <div className="userPanel">
-          <div className="Header">{User[0]}'s Contacts
-          <input type="text" placeholder="Search Contacts.." />
-          <button type="button" onClick={add_user}>addnew</button>
+          <div className="Header">
+            {User[0]}'s Contacts
+            <input type="text" placeholder="Search Contacts.." />
+            <button type="button" onClick={add_user}>
+              addnew
+            </button>
           </div>
           <div className="mainWindow">
             <ul id="Contacts">
