@@ -3,17 +3,18 @@ import socketIO from "socket.io-client";
 import { useEffect } from "react";
 import { User } from "../Register/Register";
 import "./chatApp.css";
-const ENDPOINT = "http://localhost:4500/";
+import Connection from "../SocketConnection/Connection";
+import UserPanel from "./UserPanel";
 
-const socket = socketIO(ENDPOINT, {
-  transports: ["websocket"],
-});
+const usrPanel = new UserPanel();
+const conn = new Connection();
+
 function operate() {
   let msg = document.querySelector(".textingInput textarea").value;
   msg = msg.replace(/\n/g, "<br>");
   console.clear();
   console.log(msg);
-  socket.emit("sendMessage", { msg });
+  conn.emit("sendMessage", { msg });
   add_sentMessage(msg);
   document.querySelector(".textingInput textarea").value = "";
 }
@@ -39,15 +40,11 @@ function add_sentMessage(message) {
 
 function Chat() {
   useEffect(() => {
-    socket.on(() => {
-      console.clear();
-      console.log("socket connected");
-    });
-    socket.emit("join", User);
-    socket.on("getMessage", (message) => {
-      console.log(message);
-    });
-  }, [socket]);
+    conn.on();
+    // socket.on("getMessage", (message) => {
+    //   console.log(message);
+    // });
+  }, [conn.self]);
 
   // Manages the dynamic height of the textarea
   const manage = (e) => {
