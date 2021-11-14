@@ -1,5 +1,8 @@
 import React, { Component } from "react";
-
-export class msgWindow extends Component {}
-
+import Connection from "../SocketConnection/Connection";
+export class msgWindow extends Component {
+  constructor() {
+    super();
+  }
+}
 export default msgWindow;

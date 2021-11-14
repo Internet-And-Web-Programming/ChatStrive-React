@@ -40,7 +40,7 @@ body {
   flex-direction: column;
   background-color: var(--chatbodydark);
 }
-.userPanel .mainWindow {
+.userPanel .userList {
   /* Left part */
   display: flex;
   flex: 1;
@@ -81,19 +81,10 @@ body {
   max-height: 30px;
 }
 
-.mainWindow ul {
-  display: flex;
-  max-height: 100vh;
-  flex-direction: column;
-  /*overflow-y: scroll;*/
-}
-
 .mainWindow ul li {
   min-height: 40px;
   display: flex;
-
   align-items: center;
-  justify-content: center;
   background-color: var(--usrBar);
   border-bottom: 1px solid black;
 }
@@ -151,4 +142,19 @@ body {
   flex-direction: row;
   justify-content: space-between;
   min-width: 10%;
+}
+
+.getContacts {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--chatbodydark);
+  margin: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1;
+  box-shadow: 1px 2px 4px rgb(48, 88, 88);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
