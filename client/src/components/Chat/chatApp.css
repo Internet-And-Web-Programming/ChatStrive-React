@@ -114,7 +114,9 @@ body {
   font-size: 20px;
   justify-content: flex-start;
   flex-wrap: wrap;
+  word-wrap: break-word;
   width: fit-content;
+  max-width: 80%;
   padding: 10px;
   padding-top: 5px;
   padding-bottom: 0px;
