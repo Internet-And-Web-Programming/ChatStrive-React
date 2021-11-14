@@ -9,7 +9,7 @@
   --fontcolor: #b6b6b6;
 }
 
-body{
+body {
   overflow-y: hidden;
 }
 
@@ -64,14 +64,14 @@ body{
   max-height: 30px;
 }
 
-.mainWindow ul{
+.mainWindow ul {
   display: flex;
   max-height: 100vh;
   flex-direction: column;
   /*overflow-y: scroll;*/
 }
 
-.mainWindow ul li{
+.mainWindow ul li {
   min-height: 40px;
   display: flex;
   align-items: center;
@@ -90,9 +90,12 @@ body{
   background-color: var(--chatbodydark);
 }
 
-.textingInput input {
+.textingInput textarea {
   flex: 1;
   font-size: 20px;
+  outline: none;
+  padding: 10px;
+  border-radius: 15px;
 }
 
 .textingInput button {
@@ -102,8 +105,7 @@ body{
   border-radius: 5px;
 }
 
-.message{
-  background-color: aqua;
+.message {
   display: flex;
   flex-direction: column;
   font-size: 20px;
@@ -113,13 +115,18 @@ body{
   max-width: 30%;
   margin-left: 2%;
   margin-top: 2%;
-  padding: 5px;
+  padding: 25px;
   padding-top: 10px;
   padding-bottom: 0px;
   border-radius: 5px;
+  text-align: left;
 }
-
-.messageFooter{
+#Me {
+  margin-right: 15px;
+  align-self: flex-end;
+  background-color: rgb(124, 226, 226);
+}
+.messageFooter {
   display: flex;
   font-size: small;
   padding-top: 2px;

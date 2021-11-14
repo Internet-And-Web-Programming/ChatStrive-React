@@ -1,30 +1,22 @@
 import React from "react";
 import socketIO from "socket.io-client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { User } from "../Register/Register";
 import "./chatApp.css";
-
 const ENDPOINT = "http://localhost:4500/";
 
 const socket = socketIO(ENDPOINT, {
   transports: ["websocket"],
 });
 function operate() {
-  let msg = document.querySelector(".textingInput input").value;
+  let msg = document.querySelector(".textingInput textarea").value;
+  msg = msg.replace(/\n/g, "<br>");
   console.clear();
   console.log(msg);
   socket.emit("sendMessage", { msg });
-  add_sentMessage(msg)
-  // Add the message to the chat window
-  // addMessage(msg);
+  add_sentMessage(msg);
+  document.querySelector(".textingInput textarea").value = "";
 }
-
-// function addMessage(msg) {
-//   let chatWindow = document.querySelector(".chatWindow");
-//   let newMessage = document.createElement("p");
-//   newMessage.innerHTML = msg;
-//   chatWindow.appendChild(newMessage);
-// }
 
 function add_user() {
   let newuser = document.createElement("li");
@@ -33,14 +25,16 @@ function add_user() {
 }
 
 function add_sentMessage(message) {
-  let newsent = document.createElement('div')
-  newsent.className = "message" 
-  newsent.innerHTML = document.getElementById('message').innerHTML
-  newsent.innerHTML = message
-  let messfoot = document.getElementById('Footercontainer')
-  newsent.innerHTML += messfoot.innerHTML
-  document.getElementById('mainWindow').append(newsent)
-
+  let newsent = document.createElement("div");
+  newsent.className = "message";
+  newsent.id = "Me";
+  // newsent.innerHTML = document.getElementById("message").innerHTML;
+  newsent.innerHTML = message;
+  let messfoot = document.createElement("div");
+  messfoot.className = "messageFooter";
+  messfoot.innerHTML = "Me";
+  newsent.append(messfoot);
+  document.getElementById("mainWindow").append(newsent);
 }
 
 function Chat() {
@@ -54,8 +48,14 @@ function Chat() {
       console.log(message);
     });
   }, [socket]);
-  const [msgInput, setmsgInput] = useState("");
 
+  // Manages the dynamic height of the textarea
+  const manage = (e) => {
+    e.target.style.height = "inherit";
+    // e.target.style.height = `${e.target.scrollHeight}px`;
+    let limit = 100;
+    e.target.style.height = `${Math.min(e.target.scrollHeight, limit)}px`;
+  };
   return (
     <>
       <div className="ChattingPage">
@@ -68,26 +68,18 @@ function Chat() {
             </button>
           </div>
           <div className="mainWindow">
-            <ul id="Contacts">
-              <li id="base">sample contact</li>
-            </ul>
+            <ul id="Contacts"></ul>
           </div>
         </div>
         <div className="messageWindow">
           <div className="Header">{User[0]}</div>
-          <div className="mainWindow" id="mainWindow">
-            <div className="message" id="message">
-              <span id="mainMessage">This is a sample message sent by the user oh no but it is very long what should i do if it flows out of bounds ?, Don't worry you got the flex man to save the day</span>
-            <div id="Footercontainer">
-            <div className="messageFooter">
-              <span>Date-Time</span>
-              <span>dileverystatus</span>
-              </div>
-              </div>
-              </div>
-          </div>
+          <div className="mainWindow" id="mainWindow"></div>
           <div className="textingInput">
-            <input type="text" placeholder="Type your message" />
+            <textarea
+              name="inputArea"
+              id="inpArea"
+              onKeyDown={manage}
+            ></textarea>
             <button onClick={operate}>Send</button>
           </div>
         </div>
