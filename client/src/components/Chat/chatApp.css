@@ -37,12 +37,14 @@ body {
 .messageWindow {
   display: flex;
   flex: 2;
+
   flex-direction: column;
 }
 .messageWindow .mainWindow {
   /* Right part */
   display: flex;
   flex: 1;
+  gap: 5px;
   flex-direction: column;
   background-color: var(--messagebg);
   overflow-y: scroll;
@@ -74,6 +76,7 @@ body {
 .mainWindow ul li {
   min-height: 40px;
   display: flex;
+
   align-items: center;
   justify-content: center;
   background-color: var(--usrBar);
@@ -112,11 +115,8 @@ body {
   justify-content: flex-start;
   flex-wrap: wrap;
   width: fit-content;
-  max-width: 30%;
-  margin-left: 2%;
-  margin-top: 2%;
-  padding: 25px;
-  padding-top: 10px;
+  padding: 10px;
+  padding-top: 5px;
   padding-bottom: 0px;
   border-radius: 5px;
   text-align: left;
