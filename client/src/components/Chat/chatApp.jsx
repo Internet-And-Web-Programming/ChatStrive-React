@@ -11,6 +11,13 @@ const conn = new Connection();
 
 function operate() {
   let msg = document.querySelector(".textingInput textarea").value;
+  // msg = msg.replace(/<\/?[^>]+(>|$)/g, ""); // This will prevent all XSS attacks
+  // Preventing XSS attacks
+  msg = msg.replace(/</g, "&lt;");
+  msg = msg.replace(/>/g, "&gt;");
+  msg = msg.replace(/\//g, "&#47;");
+  msg = msg.replace(/\'/g, "&#39;");
+  msg = msg.replace(/\"/g, "&quot;");
   msg = msg.replace(/\n/g, "<br>");
   console.clear();
   console.log(msg);
@@ -22,7 +29,10 @@ function operate() {
 function add_user() {
   let newuser = document.createElement("li");
   newuser.innerHTML = "New Contact";
-  document.getElementById("Contacts").append(newuser);
+  let button = document.createElement("button");
+  button.className = "Users";
+  button.append(newuser);
+  document.getElementById("Contacts").append(button);
 }
 
 function add_sentMessage(message) {
