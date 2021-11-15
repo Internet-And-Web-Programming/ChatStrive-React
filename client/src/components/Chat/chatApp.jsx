@@ -1,6 +1,8 @@
 import React from "react";
 import { useEffect } from "react";
 import { User } from "../Register/Register";
+import ReactMarkdown from "react-markdown";
+import ReactDOM from "react-dom";
 import "./chatApp.css";
 import Connection from "../SocketConnection/Connection";
 import UserPanel from "./UserPanel";
@@ -17,7 +19,7 @@ function operate() {
   msg = msg.replace(/\//g, "&#47;");
   msg = msg.replace(/\'/g, "&#39;");
   msg = msg.replace(/\"/g, "&quot;");
-  msg = msg.replace(/\n/g, "<br>");
+  //msg = msg.replace(/\n/g, "<br/>");
   console.clear();
   console.log(msg);
   conn.emit("sendMessage", { msg });
@@ -51,10 +53,16 @@ function add_user() {
 
 function add_sentMessage(message) {
   let newsent = document.createElement("div");
+  ReactDOM.render(
+    <ReactMarkdown children={message} />,
+    newsent
+  )
+  //Renders the React markdown into the container newsent. see https://www.npmjs.com/package/react-markdown
+  //use npm install react-markdown
   newsent.className = "message";
   newsent.id = "Me";
-  // newsent.innerHTML = document.getElementById("message").innerHTML;
-  newsent.innerHTML = message;
+  //newsent.innerHTML = document.getElementById("message").innerHTML;
+  //newsent.innerHTML = message;
   let messfoot = document.createElement("div");
   messfoot.className = "messageFooter";
   messfoot.innerHTML = "Me";
