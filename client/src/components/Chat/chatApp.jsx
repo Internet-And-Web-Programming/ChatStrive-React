@@ -4,7 +4,7 @@ import { User } from "../Register/Register";
 import "./chatApp.css";
 import Connection from "../SocketConnection/Connection";
 import UserPanel from "./UserPanel";
-
+// import { CSSTransitionGroup } from "react-transition-group";
 const usrPanel = new UserPanel();
 const conn = new Connection();
 
