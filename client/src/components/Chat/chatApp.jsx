@@ -6,25 +6,29 @@ import ReactDOM from "react-dom";
 import "./chatApp.css";
 import Connection from "../SocketConnection/Connection";
 import UserPanel from "./UserPanel";
-// import { CSSTransitionGroup } from "react-transition-group";
 const usrPanel = new UserPanel();
 const conn = new Connection();
 
 function operate() {
   let msg = document.querySelector(".textingInput textarea").value;
-  // msg = msg.replace(/<\/?[^>]+(>|$)/g, ""); // This will prevent all XSS attacks
-  // Preventing XSS attacks
-  msg = msg.replace(/</g, "&lt;");
-  msg = msg.replace(/>/g, "&gt;");
-  msg = msg.replace(/\//g, "&#47;");
-  msg = msg.replace(/\'/g, "&#39;");
-  msg = msg.replace(/\"/g, "&quot;");
-  //msg = msg.replace(/\n/g, "<br/>");
-  console.clear();
-  console.log(msg);
-  conn.emit("sendMessage", { msg });
-  add_sentMessage(msg);
+  msg = msg.trim();
+  if (msg != "") {
+    // msg = msg.replace(/<\/?[^>]+(>|$)/g, ""); // This will prevent all XSS attacks
+    // Preventing XSS attacks
+    msg = msg.replace(/</g, "&lt;");
+    msg = msg.replace(/>/g, "&gt;");
+    msg = msg.replace(/\//g, "&#47;");
+    msg = msg.replace(/\'/g, "&#39;");
+    msg = msg.replace(/\"/g, "&quot;");
+    //msg = msg.replace(/\n/g, "<br/>");
+    console.clear();
+    console.log(msg);
+    conn.emit("sendMessage", { msg });
+    add_sentMessage(msg);
+  }
   document.querySelector(".textingInput textarea").value = "";
+  document.querySelector(".textingInput textarea").style.height = "50px";
+  document.querySelector(".textingInput textarea").focus();
 }
 
 function askNewUser() {
@@ -53,11 +57,7 @@ function add_user() {
 
 function add_sentMessage(message) {
   let newsent = document.createElement("div");
-  ReactDOM.render(
-    <ReactMarkdown children={message} />,
-    newsent
-  )
-  //Renders the React markdown into the container newsent. see https://www.npmjs.com/package/react-markdown
+  ReactDOM.render(<ReactMarkdown children={message} />, newsent);
   //use npm install react-markdown
   newsent.className = "message";
   newsent.id = "Me";
@@ -86,7 +86,7 @@ function Chat() {
   const manage = (e) => {
     e.target.style.height = "inherit";
     // e.target.style.height = `${e.target.scrollHeight}px`;
-    let limit = 100;
+    let limit = 200;
     e.target.style.height = `${Math.min(e.target.scrollHeight, limit)}px`;
   };
 
