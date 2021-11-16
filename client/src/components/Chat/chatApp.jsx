@@ -6,30 +6,14 @@ import ReactDOM from "react-dom";
 import "./chatApp.css";
 import Connection from "../SocketConnection/Connection";
 import UserPanel from "./UserPanel";
+import msgHandler from "./msgWindow";
+import { motion } from "framer-motion";
+import Validate from "../Register/formValidation";
 const usrPanel = new UserPanel();
 const conn = new Connection();
+const msg = new msgHandler();
 
-function operate() {
-  let msg = document.querySelector(".textingInput textarea").value;
-  msg = msg.trim();
-  if (msg != "") {
-    // msg = msg.replace(/<\/?[^>]+(>|$)/g, ""); // This will prevent all XSS attacks
-    // Preventing XSS attacks
-    msg = msg.replace(/</g, "&lt;");
-    msg = msg.replace(/>/g, "&gt;");
-    msg = msg.replace(/\//g, "&#47;");
-    msg = msg.replace(/\'/g, "&#39;");
-    msg = msg.replace(/\"/g, "&quot;");
-    //msg = msg.replace(/\n/g, "<br/>");
-    console.clear();
-    console.log(msg);
-    conn.emit("sendMessage", { msg });
-    add_sentMessage(msg);
-  }
-  document.querySelector(".textingInput textarea").value = "";
-  document.querySelector(".textingInput textarea").style.height = "50px";
-  document.querySelector(".textingInput textarea").focus();
-}
+let currentUser = "";
 
 function askNewUser() {
   document.querySelector(".getContacts").style.display = "flex";
@@ -45,51 +29,55 @@ function add_user() {
   document.querySelector(".userList").innerHTML = "";
   let user = {
     name: document.querySelector(".getContacts input").value,
-    id: "temp",
+    id: document.querySelector(".getContacts input").value,
   };
-  let arr = usrPanel.addUser(user);
-  for (let i = 1; i <= arr.length; i++) {
-    document.querySelector(".userList").appendChild(arr[arr.length - i]);
+
+  if (user.name.trim() != "") {
+    let arr = usrPanel.addUser(user);
+    for (let i = 1; i <= arr.length; i++) {
+      document.querySelector(".userList").appendChild(arr[arr.length - i]);
+    }
   }
   document.querySelector(".getContacts input").value = "";
   document.querySelector(".getContacts").style.display = "none";
 }
-
-function add_sentMessage(message) {
-  let newsent = document.createElement("div");
-  ReactDOM.render(<ReactMarkdown children={message} />, newsent);
-  //use npm install react-markdown
-  newsent.className = "message";
-  newsent.id = "Me";
-  //newsent.innerHTML = document.getElementById("message").innerHTML;
-  //newsent.innerHTML = message;
-  let messfoot = document.createElement("div");
-  messfoot.className = "messageFooter";
-  messfoot.innerHTML = "Me";
-  newsent.append(messfoot);
-  document.getElementById("mainWindow").append(newsent);
-}
-
 function Chat() {
   useEffect(() => {
     conn.on();
-    // socket.on("getMessage", (message) => {
-    //   console.log(message);
-    // });
   }, [conn.self]);
   document.addEventListener("keydown", (event) => {
     if (event.altKey && event.keyCode == 78) {
       askNewUser();
     }
+    if (event.altKey && event.keyCode == 84) {
+      document.querySelector(".textingInput textarea").focus();
+    }
+    if (event.keyCode == 27) {
+      document.querySelector(".textingInput textarea").value = "";
+      document.querySelector(".textingInput textarea").blur();
+    }
   });
   // Manages the dynamic height of the textarea
   const manage = (e) => {
-    e.target.style.height = "inherit";
-    // e.target.style.height = `${e.target.scrollHeight}px`;
-    let limit = 200;
-    e.target.style.height = `${Math.min(e.target.scrollHeight, limit)}px`;
+    if (e.keyCode === 13) {
+      e.target.style.height = "inherit";
+      // e.target.style.height = `${e.target.scrollHeight}px`;
+      let limit = 200;
+      e.target.style.height = `${Math.min(e.target.scrollHeight, limit)}px`;
+      if (e.target.scrollHeight > limit) {
+        e.target.style.overflow = "auto";
+      }
+    }
   };
-
+  const trigger = (e) => {
+    if (e.keyCode == 13 && !e.shiftKey) {
+      e.target.style.height = `${e.target.scrollHeight}px`;
+    } else if (e.keyCode == 13 && e.shiftKey) {
+      e.target.style.height = "50px";
+      msg.send();
+    }
+    e.value = "";
+  };
   return (
     <>
       <div className="ChattingPage">
@@ -98,27 +86,41 @@ function Chat() {
             <b>Username of the User</b>
           </label>
           <input type="text" placeholder="Enter UserName" onKeyDown={attempt} />
-          <button onClick={add_user}>Add</button>
+          <div className="bg">
+            <button onClick={add_user}>Add</button>
+            <button
+              onClick={() => {
+                document.querySelector(".getContacts").style.display = "none";
+              }}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
         <div className="userPanel">
           <div className="Header">
-            {User[0]}'s Contacts
+            <div className="userlogo">
+              <img src="https://img.icons8.com/color/48/000000/user" />
+            </div>
+            {User[0]}
             <button type="button" onClick={askNewUser}>
-              addUser
+              new
             </button>
           </div>
           <div className="userList"></div>
         </div>
         <div className="messageWindow">
-          <div className="Header">{User[0]}</div>
+          <div className="Header">{currentUser}</div>
           <div className="mainWindow" id="mainWindow"></div>
           <div className="textingInput">
             <textarea
               name="inputArea"
               id="inpArea"
-              onKeyDown={manage}
+              style={{ height: "35px" }}
+              onKeyPress={manage}
+              onKeyDown={trigger}
             ></textarea>
-            <button onClick={operate}>Send</button>
+            <button onClick={msg.send}>Send</button>
           </div>
         </div>
       </div>
