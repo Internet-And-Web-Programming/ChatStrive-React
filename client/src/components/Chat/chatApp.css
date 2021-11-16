@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100&family=M+PLUS+Code+Latin:wght@300&family=Nanum+Gothic&family=Noto+Sans&display=swap");
 :root {
   --bodybglight: #ffffff;
   --formbglight: #e5e5e5;
@@ -7,12 +8,19 @@
   --messagebg: #8a5e95;
   --usrBar: #9e7bbe;
   --fontcolor: #b6b6b6;
+  --fontStyle1: "Josefin Sans", serif;
+  --fontStyle2: "Nanum Gothic", sans-serif;
+  --fontStyle3: "Noto Sans", sans-serif;
+  --fontStyle4: "M PLUS Code", monospace;
+  --userCard: #6f1bbd;
+  --hoverCard: #360464;
 }
-
+/* ****************************General Setup */
 body {
   overflow-y: hidden;
 }
-/* Designing scrollbar */
+
+/* ****************************Designing scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -27,7 +35,7 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
-
+/*********************************************************** Main Window design */
 .ChattingPage {
   display: flex;
   height: 100vh;
@@ -40,33 +48,8 @@ body {
   flex-direction: column;
   background-color: var(--chatbodydark);
 }
-.userPanel .userList {
-  /* Left part */
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  background-color: var(--usrBar);
-  overflow-y: scroll;
-}
-
-.messageWindow {
-  display: flex;
-  flex: 2;
-
-  flex-direction: column;
-}
-.messageWindow .mainWindow {
-  /* Right part */
-  display: flex;
-  flex: 1;
-  gap: 5px;
-  flex-direction: column;
-  background-color: var(--messagebg);
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
-
-.Header {
+/****************************************Page's Left Part */
+.userPanel .Header {
   min-height: 50px;
   display: flex;
   flex-direction: row;
@@ -77,22 +60,73 @@ body {
   font-weight: 600;
   font-size: 1.3em;
 }
-
-.Header button {
+.userPanel button {
   max-height: 30px;
+  padding: 5px;
+  border-radius: 5px;
 }
-
+.userPanel .userList {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  background-color: var(--usrBar);
+  overflow-y: scroll;
+}
+/****************** Desigining Cards in userList */
+.userPanel .userList .user {
+  pointer-events: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid var(--fontcolor);
+  background-color: var(--userCard);
+  color: var(--fontcolor);
+  font-weight: 600;
+  font-size: 1.2em;
+  transition: all 0.3s ease-in-out;
+}
+.user:hover {
+  background-color: var(--hoverCard);
+}
+/****************************************Page's Right Part */
+.messageWindow {
+  display: flex;
+  flex: 2;
+  flex-direction: column;
+}
 .messageWindow .Header {
+  min-height: 50px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   justify-content: flex-start;
+  background-color: var(--chatbodydark);
+  color: var(--fontcolor);
+  font-weight: 600;
+  font-size: 1.3em;
   padding-left: 20px;
 }
 
-.textingInput {
+.messageWindow .mainWindow {
   display: flex;
+  flex: 1;
+  gap: 5px;
+  flex-direction: column;
+  background-color: var(--messagebg);
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+/******************** Texting Input Area */
+.messageWindow .textingInput {
+  display: flex;
+  align-items: center;
   background-color: var(--chatbodydark);
 }
 
-.textingInput textarea {
+.messageWindow .textingInput textarea {
   flex: 1;
   font-size: 20px;
   outline: none;
@@ -100,12 +134,13 @@ body {
   border-radius: 15px;
 }
 
-.textingInput button {
+.messageWindow .textingInput button {
   padding: 5px;
   margin: 5px;
   margin-left: 0px;
   border-radius: 5px;
 }
+/************************************************* Message Box Designing */
 
 .message {
   display: flex;
@@ -142,46 +177,41 @@ body {
   flex-direction: row;
   justify-content: space-between;
   min-width: 10%;
+  margin-left: -20px;
 }
 
-.getContacts {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--chatbodydark);
-  margin: 15px;
-  padding: 10px;
-  border-radius: 5px;
-  z-index: 1;
-  box-shadow: 1px 2px 4px rgb(48, 88, 88);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
+/************************************************* Styling the markdown tools used */
 
-/* Styling the markdown tools used */
-
-.mainWindow .message p {
-  font-size: small;
-  font-weight: 600;
-  color: rgb(87, 87, 87);
-}
-.mainWindow .message code {
-  font-size: small;
-  background-color: rgba(87, 87, 87, 0.712);
-  color: rgb(255, 255, 255);
-  padding: 0px 2px;
-  border-radius: 5px;
-}
-/* All heading tags will have 0 padding-bottom */
+/* Headings designing!! */
 .mainWindow .message h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
+  font-family: var(--fontStyle1);
+  margin-bottom: 2px;
   padding-bottom: 0px;
+  border-bottom: rgba(85, 85, 85, 0.534) solid 1px;
+  width: 100%;
 }
+/* Paragraph Desigining */
+.mainWindow .message p {
+  font-family: var(--fontStyle3);
+  font-size: small;
+  font-weight: 600;
+  color: rgb(44, 44, 44);
+}
+/* Code Desigining */
+.mainWindow .message code {
+  font-family: var(--fontStyle4);
+  font-size: small;
+  background-color: rgba(87, 87, 87, 0.712);
+  color: rgb(255, 255, 255);
+  padding: 0px 2px;
+  border-radius: 5px;
+}
+/* Link Desigining */
 .mainWindow .message p em {
   margin: 10px 0px;
   font-size: small;
@@ -206,4 +236,36 @@ h6 {
   background-color: rgba(85, 85, 85, 0);
   color: #fff;
   font-family: fantasy;
+}
+
+/*********************************** Micellaneous */
+
+/* Adding new User */
+.getContacts {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  background-color: var(--chatbodydark);
+  margin: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1;
+  box-shadow: 1px 2px 4px rgb(48, 88, 88);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.getContacts .bg {
+  margin: 0;
+}
+.getContacts .bg {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.getContacts .bg button {
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+  font-size: small;
 }
