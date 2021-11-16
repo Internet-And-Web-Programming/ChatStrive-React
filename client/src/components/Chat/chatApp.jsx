@@ -31,7 +31,7 @@ function add_user() {
     name: document.querySelector(".getContacts input").value,
     id: document.querySelector(".getContacts input").value,
   };
-
+  // Trimming the user.name
   if (user.name.trim() != "") {
     let arr = usrPanel.addUser(user);
     for (let i = 1; i <= arr.length; i++) {
