@@ -74,7 +74,6 @@ body {
 }
 /****************** Desigining Cards in userList */
 .userPanel .userList .user {
-  pointer-events: none;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -85,12 +84,29 @@ body {
   color: var(--fontcolor);
   font-weight: 600;
   font-size: 1.2em;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
-.user:hover {
+.userPanel .user:hover {
   background-color: var(--hoverCard);
 }
 /****************************************Page's Right Part */
+.initialWindow {
+  display: flex;
+  flex: 2;
+  flex-direction: column;
+  background-color: var(--messagebg);
+  justify-content: center;
+  align-items: center;
+}
+.initialWindow .initialText {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: var(--fontcolor);
+  background-color: var(--hoverCard);
+  padding: 10px;
+  border-radius: 15px;
+}
+
 .messageWindow {
   display: flex;
   flex: 2;

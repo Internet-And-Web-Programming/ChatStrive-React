@@ -1,14 +1,12 @@
 import React from "react";
 import { useEffect } from "react";
 import { User } from "../Register/Register";
-import ReactMarkdown from "react-markdown";
-import ReactDOM from "react-dom";
 import "./chatApp.css";
 import Connection from "../SocketConnection/Connection";
 import UserPanel from "./UserPanel";
 import msgHandler from "./msgWindow";
-import { motion } from "framer-motion";
-import Validate from "../Register/formValidation";
+// import { motion } from "framer-motion";
+// import Validate from "../Register/formValidation";
 const usrPanel = new UserPanel();
 const conn = new Connection();
 const msg = new msgHandler();
@@ -20,7 +18,7 @@ function askNewUser() {
   document.querySelector(".getContacts input").focus();
 }
 function attempt(event) {
-  if (event.keyCode == 13) {
+  if (event.keyCode === 13) {
     add_user();
   }
 }
@@ -32,7 +30,7 @@ function add_user() {
     id: document.querySelector(".getContacts input").value,
   };
   // Trimming the user.name
-  if (user.name.trim() != "") {
+  if (user.name.trim() !== "") {
     let arr = usrPanel.addUser(user);
     for (let i = 1; i <= arr.length; i++) {
       document.querySelector(".userList").appendChild(arr[arr.length - i]);
@@ -44,15 +42,15 @@ function add_user() {
 function Chat() {
   useEffect(() => {
     conn.on();
-  }, [conn.self]);
+  }, []); //conn.self
   document.addEventListener("keydown", (event) => {
-    if (event.altKey && event.keyCode == 78) {
+    if (event.altKey && event.keyCode === 78) {
       askNewUser();
     }
-    if (event.altKey && event.keyCode == 84) {
+    if (event.altKey && event.keyCode === 84) {
       document.querySelector(".textingInput textarea").focus();
     }
-    if (event.keyCode == 27) {
+    if (event.keyCode === 27) {
       document.querySelector(".textingInput textarea").value = "";
       document.querySelector(".textingInput textarea").blur();
     }
@@ -70,9 +68,9 @@ function Chat() {
     }
   };
   const trigger = (e) => {
-    if (e.keyCode == 13 && !e.shiftKey) {
+    if (e.keyCode === 13 && !e.shiftKey) {
       e.target.style.height = `${e.target.scrollHeight}px`;
-    } else if (e.keyCode == 13 && e.shiftKey) {
+    } else if (e.keyCode === 13 && e.shiftKey) {
       e.target.style.height = "50px";
       msg.send();
     }
@@ -109,7 +107,10 @@ function Chat() {
           </div>
           <div className="userList"></div>
         </div>
-        <div className="messageWindow">
+        <div className="initialWindow">
+          <div className="initialText">Select a user to start chatting</div>
+        </div>
+        <div className="messageWindow" style={{ display: "none" }}>
           <div className="Header">{currentUser}</div>
           <div className="mainWindow" id="mainWindow"></div>
           <div className="textingInput">

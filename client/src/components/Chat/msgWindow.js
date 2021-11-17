@@ -8,6 +8,16 @@ export class msgHandler extends Component {
     let conn = new Connection();
     super();
     this.conn = conn;
+    this.state = {
+      messages: [
+        {
+          sender: "",
+          message: "",
+          time: "",
+          reciever: "",
+        },
+      ],
+    };
   }
   send = () => {
     // Message filtering
