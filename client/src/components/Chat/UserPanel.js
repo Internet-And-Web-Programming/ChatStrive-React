@@ -1,5 +1,5 @@
 import { Component } from "react";
-
+import msgHandler from "./msgWindow";
 export class UserPanel extends Component {
   constructor() {
     super();
@@ -22,25 +22,16 @@ export class UserPanel extends Component {
       lastMessage: "",
       lastMessageTime: "0",
     };
-    let newUsr = document.createElement("div");
-    newUsr.className = "user";
+    let newUsr = document.createElement("button");
+    newUsr.classList.add("user");
     newUsr.id = user.id;
+    // newUsr.onclick = this.open(user.id);
+    newUsr.addEventListener("click", () => {
+      this.open(user.id);
+    });
     newUsr.innerHTML = `${user.name}`;
     this.state.userList.push(newUsr);
     this.setState({ userList: this.state.userList });
-    // sorting the user list by last message
-    for (let i = 0; i < this.state.userList.length; i++) {
-      for (let j = 0; j < this.state.userList.length - 1; j++) {
-        if (
-          parseInt(this.state.userList[j].lastMessageTime) <
-          parseInt(this.state.userList[j + 1].lastMessageTime)
-        ) {
-          let temp = this.state.userList[j];
-          this.state.userList[j] = this.state.userList[j + 1];
-          this.state.userList[j + 1] = temp;
-        }
-      }
-    }
     return this.state.userList;
   };
   updateUser = (user) => {
@@ -67,5 +58,18 @@ export class UserPanel extends Component {
       }
     }
   };
+
+  open(id) {
+    if (document.querySelector(".initialWindow").style.display !== "none") {
+      document.querySelector(".initialWindow").style.display = "none";
+      document.querySelector(".messageWindow").style.display = "flex";
+      document.querySelector(".messageWindow").id = id;
+      document.querySelector(".messageWindow .Header").innerHTML = id;
+      // msgHandler.getMessages(id);
+    } else {
+      document.querySelector(".messageWindow").id = id;
+      document.querySelector(".messageWindow .Header").innerHTML = id;
+    }
+  }
 }
 export default UserPanel;
