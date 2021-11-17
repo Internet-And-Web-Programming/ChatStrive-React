@@ -1,5 +1,6 @@
 import { Component } from "react";
 import msgHandler from "./msgWindow";
+import Connection from "../SocketConnection/Connection";
 export class UserPanel extends Component {
   constructor() {
     super();
@@ -13,6 +14,7 @@ export class UserPanel extends Component {
         lastMessageTime: "0",
       },
     };
+    this.conn = new Connection();
   }
   addUser = (user) => {
     this.state.tempUser = {
@@ -61,6 +63,7 @@ export class UserPanel extends Component {
 
   open(id) {
     if (document.querySelector(".initialWindow").style.display !== "none") {
+      this.conn.emit("open", id);
       document.querySelector(".initialWindow").style.display = "none";
       document.querySelector(".messageWindow").style.display = "flex";
       document.querySelector(".messageWindow").id = id;

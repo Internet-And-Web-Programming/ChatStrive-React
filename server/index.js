@@ -5,7 +5,8 @@ const express = require("express");
 const cors = require("cors");
 const socketIO = require("socket.io");
 const app = express();
-const AES = require("crypto-js/aes");
+const mongoDB = require("./Database");
+// const AES = require("crypto-js/aes");
 
 app.get("/", (req, res) => {
   res.send("Hello world");
@@ -23,9 +24,11 @@ io.on("connection", (socket) => {
     console.clear();
     console.log(users);
   });
-  socket.on("sendMessage", (data) => {
-    console.log(data);
-    io.emit("message", data);
+  socket.on("open", (user) => {
+    console.log("user ", user, "is detected!!");
+    socket.on("send", (data) => {
+      console.log("MessageData is:- ", data);
+    });
   });
 
   socket.on("disconnect", () => {

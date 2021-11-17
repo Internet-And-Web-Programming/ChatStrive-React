@@ -1,18 +1,8 @@
-const mongoDB = require("mongodb");
-const mongoClient = mongoDB.MongoClient;
-const url = "mongodb://localhost:27017/";
+const express = require("express");
+const mongoose = require("mongoose");
+const Router = require("./routes");
 
-function Connect(callback) {
-  mongoClient.connect(url, function (err, db) {
-    if (err) {
-      console.log("Error connecting to MongoDB: " + err);
-    } else {
-      console.log("Connected to MongoDB!");
-      callback(db);
-    }
-  });
-}
+const app = express();
+app.use(express.json());
 
-export default {
-  Connect,
-};
+mongoose.connect("mongodb://localhost:27017/test", { useNewUrlParser: true });
