@@ -5,9 +5,9 @@ const express = require("express");
 const cors = require("cors");
 const socketIO = require("socket.io");
 const app = express();
-const mongoDB = require("./Database");
+const connectDB = require("./Database");
 // const AES = require("crypto-js/aes");
-
+connectDB();
 app.get("/", (req, res) => {
   res.send("Hello world");
 });
