@@ -12,7 +12,7 @@ app.get("/", (req, res) => {
   res.send("Hello world");
 });
 const users = [{}];
-const port = 4500 || process.env.PORT;
+const port = 4500;
 const server = http.createServer(app);
 const io = socketIO(server);
 app.use(cors());
