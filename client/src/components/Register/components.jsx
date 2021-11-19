@@ -30,6 +30,12 @@ const components = {
       type: "email",
       id: "email",
     },
+    {
+      placeholder: "Phone Number",
+      name: "Phone Number",
+      type: "number",
+      id: "phone",
+    },
   ],
   Login: [
     {
@@ -45,14 +51,14 @@ const components = {
       id: "password",
     },
   ],
-  SigninDrama: [
+  SigningIn: [
     {
       content: "Already a member ?",
       link: "Login",
       a: "./Login",
     },
   ],
-  LoginDrama: [
+  LoginingIn: [
     {
       content: "Not a member ?",
       link: "Signup",

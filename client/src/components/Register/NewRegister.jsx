@@ -68,9 +68,9 @@ function NewRegister() {
               </button>
             </div>
             <p>
-              {components.SigninDrama.content}
-              <Link to={components.SigninDrama.a}>
-                {components.SigninDrama.link}
+              {components.SigningIn.content}
+              <Link to={components.SigningIn.a}>
+                {components.SigningIn.link}
               </Link>
             </p>
           </form>
