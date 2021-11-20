@@ -1,3 +1,5 @@
+// This list if for global users.
+// This collection is used for login and verification of the users.
 const mongoose = require("mongoose");
 var userSchema = new mongoose.Schema({
   id: {
@@ -26,6 +28,6 @@ var userSchema = new mongoose.Schema({
     required: true,
   },
 });
-mongoose.model("UserData", userSchema);
-
+mongoose.model("UserInfo", userSchema);
+module.exports = mongoose.model("UserInfo");
 // Now Creating Table in MongoDB Compass
