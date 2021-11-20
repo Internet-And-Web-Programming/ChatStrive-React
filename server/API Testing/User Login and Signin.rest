@@ -1,0 +1,22 @@
+GET http://localhost:4500/users
+
+###
+
+GET http://localhost:4500/users/abc-124
+
+###
+
+POST http://localhost:4500/users
+Content-Type: application/json
+
+{
+  "id" : "abc-125",
+  "username" : "Testingss",
+  "password": "12364678!",
+  "name": "Testing",
+  "email": "TestingABCD@gmail.com",
+  "phone" : "1234567809"
+}
+
+###
+DELETE http://localhost:4500/users/abc-124

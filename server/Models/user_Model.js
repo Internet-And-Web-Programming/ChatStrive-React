@@ -5,6 +5,7 @@ var userSchema = new mongoose.Schema({
   id: {
     type: String,
     required: true,
+    unique: true,
   },
   username: {
     type: String,
@@ -15,19 +16,19 @@ var userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  Name: {
+  name: {
     type: String,
     required: true,
   },
-  Email: {
+  email: {
     type: String,
     required: true,
   },
-  Phone: {
-    type: Number,
+  phone: {
+    type: String,
     required: true,
   },
 });
-mongoose.model("UserInfo", userSchema);
-module.exports = mongoose.model("UserInfo");
+
+module.exports = mongoose.model("UserInfo", userSchema);
 // Now Creating Table in MongoDB Compass

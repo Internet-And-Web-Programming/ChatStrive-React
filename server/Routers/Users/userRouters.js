@@ -4,23 +4,22 @@
 
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
 const User = require("../../Models/user_Model");
-// Adding the user inside user user schema
+// Adding the user inside user user schema *******CREATE*******
 router.post("/", async (req, res) => {
   const newUser = new User({
     id: req.body.id,
     username: req.body.username,
     password: req.body.password,
-    Name: req.body.name,
-    Email: req.body.email,
-    Phone: req.body.phone,
+    name: req.body.name,
+    email: req.body.email,
+    phone: req.body.phone,
   });
   try {
     const savedUser = await newUser.save();
-    res.json(savedUser);
+    res.status(201).json(savedUser);
   } catch (err) {
-    res.json({ message: err });
+    res.status(400).json({ message: err.message });
   }
 });
 
@@ -37,4 +36,27 @@ router.get("/:id", async (req, res) => {
   }
 });
 // }
+
+// Getting all the users from the database
+router.get("/", async (req, res) => {
+  try {
+    const data = await User.find({});
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Deleting the user with it's id.
+router.delete("/:id", async (req, res) => {
+  try {
+    const removedUser = await User.deleteOne({
+      id: req.params.id,
+    });
+    res.json(removedUser);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 module.exports = router;
