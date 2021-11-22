@@ -36,7 +36,7 @@ router.post("/send", async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
-}); // Ye toh sahi likha hai.
+});
 
 // Getting all the messages of a particular user
 router.post("/user", async (req, res) => {
