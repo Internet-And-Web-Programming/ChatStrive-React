@@ -22,4 +22,4 @@ app.use("/users", userRouter);
 const msgRouter = require("../Routers/Messages/msgRouters");
 app.use("/messages", msgRouter);
 
-app.listen(4500, () => console.log("Server is running on port 4500"));
+app.listen(4501, () => console.log("Server is running on port 4501"));

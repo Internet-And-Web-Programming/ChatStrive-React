@@ -1,0 +1,20 @@
+POST http://localhost:4501/messages
+Content-Type: application/json
+
+{
+  "id" : "1",
+  "userConnections" : [
+    "PersonX":{
+      "id": "2",
+      "sharedKey" : "12345",
+      "ListofMsgs" : [
+        {
+          "msg": "Hello",
+          "sender" : "Tanmay",
+          "receiver" : "Ayush",
+          "time" : "12:00"
+        }
+      ]
+    }
+  ]
+}
