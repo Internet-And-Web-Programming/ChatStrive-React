@@ -12,9 +12,16 @@ while True:
     messagemain = ""
     for j in range(0,random.randint(1,20)):
         messagemain+=" " + random.choice(messagec)
-    resp = requests.post('http://192.168.1.10:4500/new_message',json={"senderID":"user"+str(random.choice(sl)),"recvID":"user"+str(random.choice(rl)),"message":messagemain})
+    sender = str(random.choice(sl))
+    recv = str(random.choice(rl))
+    resp = requests.post('http://192.168.1.10:4500/new_message',json={"senderID":"user"+ sender,"recvID":"user"+ recv,"message":messagemain})
     print(resp.text)
     i+=1
     if(i==3000):
         break
+    # the create session request
+    resp_session = requests.post('http://192.168.1.10:4500/create_session',json={"User1":"user"+ sender,"User2":"user"+ recv})
+    if(resp_session.status_code==502):
+        continue
+    
 
