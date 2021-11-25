@@ -5,7 +5,7 @@ import Validate from "./formValidation";
 import components from "./components";
 import "./reg.css";
 import { Connection } from "../SocketConnection/Connection";
-
+import { SHA1 } from "crypto-js";
 const conn = new Connection();
 class ElementList {
   constructor(name, link) {
@@ -27,15 +27,14 @@ function NewRegister() {
 
   const sendUserDetails = () => {
     var form = document.forms[0].elements;
-    console.clear();
-    console.log(form);
     for (var i = 0; i < form.length - 1; i++) {
-      user.key = form[i].name;
-      user.value = form[i].value;
-      UserDetails.push(user);
-      user = {};
+      user[form[i].name] = form[i].value;
+      if (form[i].name === "Password") {
+        user[form[i].name] = SHA1(form[i].value).toString();
+      }
     }
-    conn.emit("NewRegister", UserDetails);
+    conn.emit("NewRegister", user);
+    user = {};
     console.log(UserDetails);
   };
 

@@ -6,7 +6,7 @@ import "./reg.css";
 import { Link } from "react-router-dom";
 import { UserDetails } from "./NewRegister";
 import { Connection } from "../SocketConnection/Connection";
-import SHA256 from "crypto-js/sha256";
+import SHA1 from "crypto-js/sha1";
 
 let conn = new Connection();
 
@@ -16,19 +16,7 @@ class ElementList {
     this.link = link;
   }
 }
-let User = [];
-function setUserValues(value) {
-  if (User.length === 1) {
-    value = SHA256(value).toString();
-  }
-  if (User.length === 2) {
-    User.pop();
-    User.pop();
-  }
-  User.push(value);
-  console.log("User is ", User);
-}
-
+let User = {};
 // List of elements to be displayed in the nav bar
 const navBarElements = [
   new ElementList("Home", "/"),
@@ -45,36 +33,32 @@ function Register() {
     changeName(Validate(e.target));
   }
 
-  const verify = (forms) => {
-    setUserValues(forms);
-  };
-  const eve = (event) => {
+  const Login = (event) => {
     let forms = document.forms[0].elements;
-    var check = true;
-    for (let i = 0; i < forms.length - 1; i++) {
-      if (forms[i].value === "") {
-        check = false;
-      }
-    }
     if (name !== "") {
-      check = false;
-      alert("Please fill the details properly");
-    }
-    if (!check) {
-      console.log("Please fill all the fields");
-      event.preventDefault();
-    } else {
-      for (let i = 0; i < forms.length - 1; i++) {
-        verify(forms[i].value);
+      let check = true;
+      for (let i = 0; i < forms.length; i++) {
+        if (forms[i].value === "") {
+          check = false;
+        }
       }
-      conn.emit("register", User);
+      if (check) {
+        for (let i = 0; i < forms.length; i++) {
+          User[forms[i].name] = forms[i].value;
+          if (forms[i].name === "Password") {
+            User[forms[i].name] = SHA1(forms[i].value).toString();
+          }
+        }
+      } else {
+        event.preventDefault();
+        alert("Please fill in all the fields");
+      }
     }
   };
   // Sending the data to the server using socket
 
   useEffect(() => {
     conn.on();
-    
   }, [conn.self]);
 
   return (
@@ -97,7 +81,7 @@ function Register() {
               </div>
             ))}
             <div className="bg">
-              <Link to="/Chat" onClick={eve}>
+              <Link to="/Chat" onClick={Login}>
                 <button>Login</button>
               </Link>
             </div>

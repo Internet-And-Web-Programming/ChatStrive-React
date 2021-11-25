@@ -4,6 +4,7 @@ var strdec = require("string_decoder").StringDecoder;
 var mysql = require("mysql");
 var cryptojs = require("crypto-js");
 var bcrypt = require("bcrypt-nodejs");
+var SHA1 = require("crypto-js/sha1");
 var time = require("time");
 module.exports = class Database {
   constructor() {
@@ -36,11 +37,11 @@ module.exports = class Database {
       "values ('" +
       userID +
       "', '" +
-      data.name +
+      data.Name +
       "', '" +
-      data.username +
+      data.Username +
       "', '" +
-      data.password +
+      data.Password +
       "' )";
     console.log(fquery);
     this.con.query(fquery, function (err, result) {
@@ -52,97 +53,106 @@ module.exports = class Database {
       }
     });
   }
-  fetch_message(req) {
-    let decoder = new strdec("utf-8");
-    let buffer = "";
-    req.on("data", function (chunk) {
-      buffer += decoder.write(chunk);
-    });
-    req.on("end", function () {
-      buffer += decoder.end();
-      var queryobj = JSON.parse(buffer);
-      let fquery =
-        "select * from Messages where (senderID = '" +
-        queryobj.senderID +
-        "'and recvID = '" +
-        queryobj.recvID +
-        "')";
-      this.con.query(fquery, function (err, result) {
-        if (err) throw err;
-        // console.log("");
-        res.writeHead(200, "OK", {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        });
-        return JSON.stringify(result);
-      });
+  // Checking Logging in.
+  sign_in(user) {
+    let fquery =
+      "select * from Users where (Username = '" + user.username + "')";
+    this.con.query(fquery, function (err, result) {
+      if (err) {
+        throw err;
+      }
+      if (!result) {
+        console.log("User not found");
+      } else {
+        let enctoken = bcrypt.hashSync(user.username);
+        // This token will be given to the user for that session.
+        let response = this.fetch_contacts(response);
+        return response;
+      }
     });
   }
-  new_message(req) {
-    let decoder = new strdec("utf-8");
-    let buffer = "";
-    req.on("data", function (chunk) {
-      buffer += decoder.write(chunk);
-    });
-    req.on("end", function () {
-      buffer += decoder.end();
-      var messageobj = JSON.parse(buffer);
-      let fquery =
-        "insert into Messages values ('" +
-        messageobj.senderID +
-        "','" +
-        messageobj.recvID +
-        "','" +
-        messageobj.message +
-        "')";
-      this.con.query(fquery, function (err, result) {
-        if (err) throw err;
-        // create_session()
-        console.log(
-          "New Message: " + messageobj.senderID + " to " + messageobj.recvID
-        );
-        res.writeHead(200, "OK", {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
+  fetch_message(currUser, targetUser) {
+    // query where either currUser is sender and targetUser is receiver or vice versa
+    let response = [];
+    let fquery =
+      "select * from Messages where (Sender = '" +
+      currUser +
+      "' and Receiver = '" +
+      targetUser +
+      "') or (Sender = '" +
+      targetUser +
+      "' and Receiver = '" +
+      currUser +
+      "')";
+    this.con.query(fquery, function (err, result) {
+      if (err) throw err;
+      if (!result) {
+        response = [
+          {
+            Condition: "empty",
+          },
+        ];
+      } else {
+        response.push({
+          Condition: "notempty",
         });
-        return buffer;
-      });
-    });
-  }
-  sign_in(req, res) {
-    let decoder = new strdec("utf-8");
-    let buffer = "";
-    req.on("data", function (chunk) {
-      buffer += decoder.write(chunk);
-    });
-    req.on("end", function () {
-      buffer += decoder.end();
-      var userobj = JSON.parse(buffer);
-      let fquery =
-        "select * from Users where (UserID = '" + userobj.UserID + "')";
-      this.con.query(fquery, function (err, result) {
-        if (err) throw err;
-        if (!result) {
-          res.writeHead(401, "UNAUTHORIZED", {
-            "Access-Control-Allow-Origin": "*",
-          });
-          res.end();
+        for (let i = 0; i < result.length; i++) {
+          response.push(result[i]);
         }
-        res.writeHead(200, "OK", {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        });
-        console.log("Found User");
-        let token = { UserID: result[0].UserID };
-        let enctoken = cryptojs.AES.encrypt(
-          JSON.stringify(token),
-          "secretkey123"
-        ).toString();
-        res.write(enctoken);
-        res.end();
-      });
+      }
+      return response;
     });
   }
+  new_message(currUser, targetUser, Msg) {
+    // First getting the currUserID and targetUserID
+    let currUserID = "";
+    let targetUserID = "";
+    let fquery =
+      "select UserID from Users where Username ='" + currUser.username + "'";
+    this.con.query(fquery, (err, result) => {
+      if (err) throw err;
+      if (!result) {
+        console.log("User not found");
+      } else {
+        currUserID = result[0].UserID;
+      }
+    });
+    fquery =
+      "select UserID from Users where Username ='" + targetUser.username + "'";
+    this.con.query(fquery, (err, result) => {
+      if (err) throw err;
+      if (!result) {
+        console.log("User not found");
+      } else {
+        targetUserID = result[0].UserID;
+      }
+    });
+    if (currUserID == "" || targetUserID == "") {
+      console.log(
+        "Not able to find who are you or to whom you are talking to."
+      );
+      return null;
+    } else {
+      let query =
+        "insert into Messages (SenderID, ReceiverID, Message) values ('" +
+        currUserID +
+        "','" +
+        targetUserID +
+        "','" +
+        Msg +
+        "')";
+      this.con.query(query, (err, result) => {
+        if (err) {
+          console.log(
+            "Message is not regestered in the server because of the following reasons.\n",
+            err
+          );
+        }
+        console.log("Message Registered inside the database.");
+      });
+    }
+  }
+
   // create session endpoint to be hit, whenever message sent (or user searched -- optional) -- see ./messages.py
   // basically creates a log of who sent to who without duplication
   // 'Sessions' table is used in fetch_contacts

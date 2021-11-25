@@ -1,5 +1,6 @@
 // import { Connect } from "./Database";
-
+// Comments that are ending with '...' are comments related to users.
+// Comments that are ending with '//' are comments related to messages.
 const http = require("http");
 const express = require("express");
 const cors = require("cors");
@@ -19,28 +20,37 @@ const io = socketIO(server);
 app.use(cors());
 
 io.on("connection", (socket) => {
+  // Creating a new user and storing in the database... *****Working well*****
   socket.on("NewRegister", (UserDetails) => {
     console.log(UserDetails);
+    db.sign_up(UserDetails);
   });
-
-  socket.on("register", (data) => {
+  // when the user is entering the chat room than what things should happen...
+  socket.on("register", (User) => {
     users[socket.id] = data;
-    let User = {
-      name: "Unkown",
-      username: data[0],
-      password: data[1],
-    };
-    db.sign_up(User);
-
-    // console.log(users);
-  });
-  socket.on("open", (user) => {
-    console.log("user ", user, "is detected!!");
-    socket.on("send", (data) => {
-      console.log("MessageData is:- ", data);
-    });
+    let usersLoading = db.sign_in(User);
+    socket.emit("UsersLoading", usersLoading);
   });
 
+  //  When the user is selected then then we have to fetch all the messages from that user.
+  socket.on("click", (currUser, targetUser) => {
+    let loadMsgs = db.fetch_message(currUser, targetUser);
+    if (!loadMsgs) {
+      loadMsgs = { error: "Not able to fetch messages" };
+    }
+    socket.emit("messages", loadMsgs);
+  });
+  // When the user is typing a new message.
+  socket.on("newMsg", (currUser, targetUser, Msg) => {
+    db.new_message(currUser, targetUser, Msg);
+  });
+  // Constantly checking the new messages of a particular user.
+  async function checkNewMsg(currUser) {
+    let newMsg = await db.fetch_message(currUser); //Dobut in this particular function.
+    if (newMsg) {
+      socket.emit("newMsg", newMsg);
+    }
+  }
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });
