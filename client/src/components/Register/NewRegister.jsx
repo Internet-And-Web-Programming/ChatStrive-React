@@ -6,7 +6,9 @@ import components from "./components";
 import "./reg.css";
 import { Connection } from "../SocketConnection/Connection";
 import { SHA1 } from "crypto-js";
+
 const conn = new Connection();
+
 class ElementList {
   constructor(name, link) {
     this.name = name;
@@ -14,19 +16,22 @@ class ElementList {
   }
 }
 
+let User = {};
+
 // List of elements to be displayed in the nav bar
 const navBarElements = [
   new ElementList("Home", "/"),
   new ElementList("Login", "/Register"),
   new ElementList("ContactUs", "/ContactUs"),
 ];
-let UserDetails = [];
+
 function NewRegister() {
   console.clear();
   let user = {};
 
-  const sendUserDetails = () => {
+  const signIN = () => {
     var form = document.forms[0].elements;
+
     for (var i = 0; i < form.length - 1; i++) {
       user[form[i].name] = form[i].value;
       if (form[i].name === "Password") {
@@ -35,7 +40,7 @@ function NewRegister() {
     }
     conn.emit("NewRegister", user);
     user = {};
-    console.log(UserDetails);
+    console.log(user);
   };
 
   const [name, changeName] = useState("");
@@ -65,7 +70,7 @@ function NewRegister() {
               </div>
             ))}
             <div className="bg">
-              <button onClick={sendUserDetails}>
+              <button onClick={signIN}>
                 <Link to="/Register">Sign In</Link>
               </button>
             </div>
@@ -116,4 +121,3 @@ const style3 = {
 };
 
 export default NewRegister;
-export { UserDetails };

@@ -26,8 +26,8 @@ io.on("connection", (socket) => {
     db.sign_up(UserDetails);
   });
   // when the user is entering the chat room than what things should happen...
-  socket.on("register", (User) => {
-    users[socket.id] = data;
+  socket.on("login", (User) => {
+    console.log(User);
     let usersLoading = db.sign_in(User);
     socket.emit("UsersLoading", usersLoading);
   });

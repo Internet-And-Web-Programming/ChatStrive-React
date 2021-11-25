@@ -25,6 +25,7 @@ module.exports = class Database {
       }
     });
   }
+
   // Adding the new user in the database.
   sign_up(data) {
     const generate = (data) => {
@@ -56,18 +57,64 @@ module.exports = class Database {
   // Checking Logging in.
   sign_in(user) {
     let fquery =
-      "select * from Users where (Username = '" + user.username + "')";
+      "select * from Users where (Username = '" +
+      user.Username +
+      "'and Password = '" +
+      user.Password +
+      "')";
     this.con.query(fquery, function (err, result) {
       if (err) {
         throw err;
       }
-      if (!result) {
+      if (result.length == 0) {
         console.log("User not found");
-      } else {
-        let enctoken = bcrypt.hashSync(user.username);
-        // This token will be given to the user for that session.
-        let response = this.fetch_contacts(response);
+        let response = [
+          {
+            Condition: "notfound",
+          },
+        ];
         return response;
+      } else {
+        //**************************This means User is found
+        console.log("Result is :- ", result);
+        // let enctoken = bcrypt.hashSync(user.username);
+        // Fetching contacts
+        let response = [
+          {
+            Condition: "found",
+          },
+        ];
+        let query1 =
+          "Select connections from Connections WHERE UserID = '" +
+          result[0].UserID +
+          "';"; //************************** Fetching all the contacts of the users.
+        let ans = "";
+        this.con.query(query1, function (err, result2) {
+          if (err) {
+            console.log(err);
+          }
+          if (result2 === undefined) {
+            return response.push("empty");
+          } else {
+            console.log("Result level2 is :- ", result2);
+            // if the result is not empty then the users are found.
+            let users = result2[0].connections.split(",");
+            for (let i = 0; i < users.length; i++) {
+              let query2 =
+                "Select Username from Users WHERE UserID = '" + users[i] + "';";
+              this.con.query(query2, function (err, result2) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  ans += JSON.stringify(result[0]) + ",";
+                }
+              });
+            }
+            ans = ans.substring(0, ans.length - 1);
+            console.log(ans);
+            return response.push(ans);
+          }
+        });
       }
     });
   }
@@ -208,29 +255,6 @@ module.exports = class Database {
           // move console log here (last message issue)
         }
       });
-    });
-  }
-  fetch_contacts(UserID) {
-    let query =
-      "Select connections from Connections WHERE UserID = '" + UserID + "';";
-    this.con.query(query, function (err, result) {
-      if (err) {
-        console.log(err);
-      }
-      let users = result[0].connections.split(",");
-      let ans = "";
-      for (let i = 0; i < users.length; i++) {
-        let query = "Select * from Users WHERE UserID = '" + users[i] + "';";
-        this.con.query(query, function (err, result) {
-          if (err) {
-            console.log(err);
-          }
-          ans += JSON.stringify(result[0]) + ",";
-        });
-      }
-      ans = ans.substring(0, ans.length - 1);
-      console.log(ans);
-      return ans;
     });
   }
 };

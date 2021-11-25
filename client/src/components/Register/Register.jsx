@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Nav from "../Navigation/NavBar";
 import Validate from "./formValidation";
 import components from "./components";
 import "./reg.css";
 import { Link } from "react-router-dom";
-import { UserDetails } from "./NewRegister";
 import { Connection } from "../SocketConnection/Connection";
 import SHA1 from "crypto-js/sha1";
 
-let conn = new Connection();
+const conn = new Connection();
 
 class ElementList {
   constructor(name, link) {
@@ -26,41 +25,25 @@ const navBarElements = [
 
 // Main function of this file
 function Register() {
-  // console.log("These are the user details", UserDetails);
+  console.clear();
+  let User = {};
+  const Login = () => {
+    var forms = document.forms[0].elements;
+
+    for (var i = 0; i < forms.length - 1; i++) {
+      User[forms[i].name] = forms[i].value;
+      if (forms[i].name === "Password") {
+        User[forms[i].name] = SHA1(forms[i].value).toString();
+      }
+    }
+    console.log(User);
+    conn.emit("login", User);
+  };
   const [name, changeName] = useState("");
   function handleChange(e) {
     e.preventDefault();
     changeName(Validate(e.target));
   }
-
-  const Login = (event) => {
-    let forms = document.forms[0].elements;
-    if (name !== "") {
-      let check = true;
-      for (let i = 0; i < forms.length; i++) {
-        if (forms[i].value === "") {
-          check = false;
-        }
-      }
-      if (check) {
-        for (let i = 0; i < forms.length; i++) {
-          User[forms[i].name] = forms[i].value;
-          if (forms[i].name === "Password") {
-            User[forms[i].name] = SHA1(forms[i].value).toString();
-          }
-        }
-      } else {
-        event.preventDefault();
-        alert("Please fill in all the fields");
-      }
-    }
-  };
-  // Sending the data to the server using socket
-
-  useEffect(() => {
-    conn.on();
-  }, [conn.self]);
-
   return (
     <div style={style}>
       <Nav navElements={navBarElements} />
@@ -81,9 +64,9 @@ function Register() {
               </div>
             ))}
             <div className="bg">
-              <Link to="/Chat" onClick={Login}>
-                <button>Login</button>
-              </Link>
+              <button onClick={Login}>
+                <Link to="/Chat">Login</Link>
+              </button>
             </div>
           </form>
           <p>{name}</p>
