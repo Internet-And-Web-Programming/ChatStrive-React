@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import Validate from "./formValidation";
 import components from "./components";
 import "./reg.css";
+import { Connection } from "../SocketConnection/Connection";
+
+const conn = new Connection();
 class ElementList {
   constructor(name, link) {
     this.name = name;
@@ -32,7 +35,7 @@ function NewRegister() {
       UserDetails.push(user);
       user = {};
     }
-
+    conn.emit("NewRegister", UserDetails);
     console.log(UserDetails);
   };
 

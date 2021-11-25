@@ -5,11 +5,12 @@ const express = require("express");
 const cors = require("cors");
 const socketIO = require("socket.io");
 const app = express();
-const connectDB = require("./Database");
+var Database = require("./Models/db");
+
 // const AES = require("crypto-js/aes");
-connectDB();
+let db = new Database();
 app.get("/", (req, res) => {
-  res.send("Hello world");
+  res.send("Yes, we are listening at this port");
 });
 const users = [{}];
 const port = 4500;
@@ -18,11 +19,20 @@ const io = socketIO(server);
 app.use(cors());
 
 io.on("connection", (socket) => {
-  console.log("New user connected");
+  socket.on("NewRegister", (UserDetails) => {
+    console.log(UserDetails);
+  });
+
   socket.on("register", (data) => {
     users[socket.id] = data;
-    console.clear();
-    console.log(users);
+    let User = {
+      name: "Unkown",
+      username: data[0],
+      password: data[1],
+    };
+    db.sign_up(User);
+
+    // console.log(users);
   });
   socket.on("open", (user) => {
     console.log("user ", user, "is detected!!");
