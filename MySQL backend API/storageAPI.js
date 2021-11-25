@@ -6,171 +6,208 @@ var mysql = require('mysql');
 var cryptojs = require('crypto-js');
 
 var con = mysql.createConnection({
-    host : 'localhost',
-    user : 'root',
-    password : 'ayush2301',
-    database : 'ChatStrive'
+    host: 'localhost',
+    user: 'root',
+    password: 'ayush2301',
+    database: 'ChatStrive'
 })
 
-// API INFO: (all request fields are case sensitive) (all requests are POST)
-
-//     /sign_up=>
-//     request
-//         {
-//             ID:""
-//             name:"" - password field need to be added
-//         }
-//     Response - response unimportant(only needed for confirmation of insertion)
-//         String({ID:,name:})
-
-//     /sign_in=>
-//     request
-//         {
-//             UserID:""
-//         }
-//     Response
-//     String(encoded token)
-//     where token = AES encrypted JSON.stringify({UserID}) - password field need to be added
-
-//     /new_message=>
-//     request
-//     {
-//         senderID:""
-//         recvID:""
-//         message:""
-//     }
-//     response
-//         String(senderID,recvID,message) - again, response unimportant(only needed for confirmation of insertion)
-//     /fetch_message=>
-//     request
-//     {
-//         senderID:""
-//         recvID:""
-//     }
-//     response
-//     List of objects.
-
-// Hints for pagination ==> select * from --- where --- LIMIT x -> x is the number of outputs
-
-con.connect(function(err){
-    if(err) throw err;
+con.connect(function (err) {
+    if (err) throw err;
 })
 
-function sign_up(req,res){
+function sign_up(req, res) {
     let decoder = new strdec('utf-8');
     let buffer = "";
-    req.on("data",function(chunk){
+    req.on("data", function (chunk) {
         buffer += decoder.write(chunk);
-        
+
     })
-    req.on("end",function(){
+    req.on("end", function () {
         buffer += decoder.end();
         var userobj = JSON.parse(buffer);
-            let fquery = "insert into Users values ('"+userobj.ID+"','"+userobj.name+"')";
-            con.query(fquery,function(err,result){
-                if(err) throw err;
-                console.log('New Insertion : '+userobj);
-                res.writeHead(200,"OK",{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});
-                res.write(buffer);
-                res.end();
-        }) 
+        let fquery = "insert into Users values ('" + userobj.ID + "','" + userobj.name + "')";
+        con.query(fquery, function (err, result) {
+            if (err) throw err;
+            console.log('New Insertion : ' + userobj);
+            res.writeHead(200, "OK", { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+            res.write(buffer);
+            res.end();
+        })
     })
 }
 
-function fetch_message(req,res){
+function fetch_message(req, res) {
     let decoder = new strdec('utf-8');
     let buffer = "";
-    req.on("data",function(chunk){
+    req.on("data", function (chunk) {
         buffer += decoder.write(chunk);
-        
+
     })
-    req.on("end",function(){
+    req.on("end", function () {
         buffer += decoder.end();
         var queryobj = JSON.parse(buffer);
-            let fquery = "select * from Messages where (senderID = '"+queryobj.senderID+"'and recvID = '"+queryobj.recvID+"')";
-            con.query(fquery,function(err,result){
-                if(err) throw err;
-                // console.log("");
-                res.writeHead(200,"OK",{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});
-                res.write(JSON.stringify(result));
-                res.end();
-        }) 
+        let fquery = "select * from Messages where (senderID = '" + queryobj.senderID + "'and recvID = '" + queryobj.recvID + "')";
+        con.query(fquery, function (err, result) {
+            if (err) throw err;
+            // console.log("");
+            res.writeHead(200, "OK", { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+            res.write(JSON.stringify(result));
+            res.end();
+        })
     })
 }
 
-function new_message(req,res){
+function new_message(req, res) {
     let decoder = new strdec('utf-8');
     let buffer = "";
-    req.on("data",function(chunk){
+    req.on("data", function (chunk) {
         buffer += decoder.write(chunk);
-        
+
     })
-    req.on("end",function(){
+    req.on("end", function () {
         buffer += decoder.end();
         var messageobj = JSON.parse(buffer);
-            let fquery = "insert into Messages values ('"+messageobj.senderID+"','"+messageobj.recvID+"','"+messageobj.message+"')";
-            con.query(fquery,function(err,result){
-                if(err) throw err;
-                console.log('New Insertion : '+ buffer);
-                res.writeHead(200,"OK",{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});
-                res.write(buffer);
-                res.end();
-        }) 
+        let fquery = "insert into Messages values ('" + messageobj.senderID + "','" + messageobj.recvID + "','" + messageobj.message + "')";
+        con.query(fquery, function (err, result) {
+            if (err) throw err;
+            // create_session()
+            console.log('New Message: ' + messageobj.senderID +' to '+ messageobj.recvID);
+            res.writeHead(200, "OK", { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+            res.write(buffer);
+            res.end();
+        })
     })
 }
 
-function sign_in(req,res){
+function sign_in(req, res) {
     let decoder = new strdec('utf-8');
     let buffer = "";
-    req.on("data",function(chunk){
+    req.on("data", function (chunk) {
         buffer += decoder.write(chunk);
-        
+
     })
-    req.on("end",function(){
+    req.on("end", function () {
         buffer += decoder.end();
         var userobj = JSON.parse(buffer);
-            let fquery = "select * from Users where (UserID = '"+userobj.UserID+"')";
-            con.query(fquery,function(err,result){
-                if(err) throw err;
-                if(!result){
-                    res.writeHead(401,"UNAUTHORIZED",{'Access-Control-Allow-Origin':'*'});
-                    res.end();
-                }
-                res.writeHead(200,"OK",{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});
-                console.log('Found User');
-                let token = {"UserID":result[0].UserID}
-                let enctoken = cryptojs.AES.encrypt(JSON.stringify(token),'secretkey123').toString();
-                res.write(enctoken);
+        let fquery = "select * from Users where (UserID = '" + userobj.UserID + "')";
+        con.query(fquery, function (err, result) {
+            if (err) throw err;
+            if (!result) {
+                res.writeHead(401, "UNAUTHORIZED", { 'Access-Control-Allow-Origin': '*' });
                 res.end();
-        }) 
+            }
+            res.writeHead(200, "OK", { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+            console.log('Found User');
+            let token = { "UserID": result[0].UserID }
+            let enctoken = cryptojs.AES.encrypt(JSON.stringify(token), 'secretkey123').toString();
+            res.write(enctoken);
+            res.end();
+        })
     })
 }
 
-http.createServer(function(req,resp){
-    if(req.method=="OPTIONS"){
-        resp.writeHead(200,"OK",{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'*','Access-Control-Allow-Methods':'*'});
+// create session endpoint to be hit, whenever message sent (or user searched -- optional) -- see ./messages.py
+// basically creates a log of who sent to who without duplication
+// 'Sessions' table is used in fetch_contacts
+function create_session(req, res) {
+    let decoder = new strdec('utf-8');
+    let buffer = "";
+    req.on("data", function (chunk) {
+        buffer += decoder.write(chunk);
+    })
+    req.on("end", function () {
+        buffer += decoder.end();
+        userobj = JSON.parse(buffer);
+        let fquery = "insert into Sessions values('" + userobj.User1 + "','" + userobj.User2 + "')";
+        con.query(fquery, function (err, result) {
+            if (err) {
+                if (err.code == "ER_DUP_ENTRY") {
+                    console.log("Session: "+ userobj.User1 +" to "+ userobj.User2 +" already recorded, skipping...\n");
+                    res.writeHead(502, "BAD GATEWAY", { 'Access-Control-Allow-Origin': '*' });
+                    res.end();
+                }
+                else throw err;
+            }
+            else {
+                console.log(buffer);
+                console.log("Session: "+ userobj.User1 +" to "+ userobj.User2 +" added into record\n");
+                res.writeHead(200, "OK", { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+                res.write(JSON.stringify(buffer));
+                res.end();
+                // move console log here (last message issue)
+            }
+        })
+    })
+}
+
+function fetch_contacts(req,res){
+    let decoder = new strdec('utf-8');
+    let buffer = "";
+    req.on("data", function (chunk) {
+        buffer += decoder.write(chunk);
+
+    })
+    req.on("end", function () {
+        buffer += decoder.end();
+        var queryobj = JSON.parse(buffer);
+        let fquery = "select User2 as 'Username' from Sessions where (User1 = '" + queryobj.User1 + "')";
+        con.query(fquery, function (err, result) {
+            if (err) throw err;
+            // console.log("");
+            res.writeHead(200, "OK", { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+            res.write(JSON.stringify(result));
+            res.end();
+        })
+    }) 
+}
+
+// function new_session(x, y) {
+//     let fquery = "insert into Sessions values('" + x + "','" + y + "')";
+//     con.query(fquery, function (err, result) {
+//         if (err) {
+//             if (err.code == "ER_DUP_ENTRY") {
+//                 return;
+//             }
+//             else throw err;
+//         }
+//         else {
+//             return;
+//         }
+//     })
+// }
+
+http.createServer(function (req, resp) {
+    if (req.method == "OPTIONS") {
+        resp.writeHead(200, "OK", { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': '*', 'Access-Control-Allow-Methods': '*' });
         resp.end();
     }
-    else if(req.method=="GET"){
+    else if (req.method == "GET") {
         //For checking connectivity
-        resp.writeHead(200,"OK",{'Content-Type':'text/plain','Access-Control-Allow-Origin':'*'});
+        resp.writeHead(200, "OK", { 'Content-Type': 'text/plain', 'Access-Control-Allow-Origin': '*' });
         resp.write("Enpoint Hit, Request Acknowledged")
     }
-    else{
+    else {
         let path = url.parse(req.url, true);
-        switch(path.pathname){
+        switch (path.pathname) {
             case "/sign_up":
-                sign_up(req,resp);
+                sign_up(req, resp);
                 break;
             case "/sign_in":
-                sign_in(req,resp);
+                sign_in(req, resp);
                 break
             case "/new_message":
-                new_message(req,resp);
+                new_message(req, resp);
                 break;
             case "/fetch_message":
-                fetch_message(req,resp);
+                fetch_message(req, resp);
+                break;
+            case "/create_session":
+                create_session(req, resp);
+                break;
+            case "/fetch_contacts":
+                fetch_contacts(req,resp);
                 break;
         }
     }
-}).listen(4500,"192.168.1.10");
+}).listen(4500, "192.168.1.10");
