@@ -27,6 +27,7 @@ create table if not exists Messages (
   ReceiverID varchar(255) not null,
   Message varchar(255) not null,
   Time datetime not null default current_timestamp,
+  seen boolean not null default false,
   PRIMARY KEY (id),
   -- FOREIGN KEY (UserID) REFERENCES Users(UserID),
   FOREIGN KEY (SenderID) REFERENCES Users(UserID),
