@@ -15,7 +15,7 @@ create table if not exists Users (
 create table if not exists Connections (
   UserID varchar(255) not null,
   Username varchar(255) not null,
-  connections varchar(50000) not null,
+  connections varchar(5000) not null,
   FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
 -- These will consist of all the series of messages that are there amoungst the users 
