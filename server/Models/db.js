@@ -55,40 +55,32 @@ module.exports = class Database {
     });
   }
   // Checking Logging in.
-  sign_in(user) {
+  async sign_in(User) {
     let fquery =
-      "select * from Users where (Username = '" +
-      user.Username +
-      "'and Password = '" +
-      user.Password +
-      "')";
-    var result = [];
-    this.con.query(fquery, function (err, result) {
-      // Since query is an async function, we need to use callback function to get the result.
-      let response = [];
+      "select * from Users where Username = '" +
+      User.Username +
+      "' and Password = '" +
+      User.Password +
+      "'";
+    const response = await this.con.query(fquery, function (err, result) {
       if (err) {
-        throw err;
-      }
-      if (result.length == 0) {
-        // ********** if the user is not found
-        console.log("User not found");
-        response.push({
-          Condition: "notfound",
-        });
+        console.log(err);
       } else {
-        //**************************This means User is found
-        response.push({
-          Condition: "found",
-        });
-        response.push(result[0]);
-        console.log("The Response is... \n\n", response);
+        if (result.length > 0) {
+          response.push({
+            Condition: "success",
+          });
+          console.log("User Found");
+          response.push(result[0]);
+          console.log(result[0]);
+        } else {
+          response.push({
+            Condition: "failure",
+          });
+        }
       }
-      setResponse(response);
     });
-    function setResponse(response) {
-      result = response;
-    }
-    return result;
+    return response;
   }
   fetch_message(currUser, targetUser) {
     // query where either currUser is sender and targetUser is receiver or vice versa
