@@ -29,6 +29,7 @@ io.on("connection", (socket) => {
   socket.on("login", (User) => {
     console.log(User);
     let usersLoading = db.sign_in(User);
+    console.log("UserLoading is... \n", usersLoading);
     socket.emit("UsersLoading", usersLoading);
   });
 

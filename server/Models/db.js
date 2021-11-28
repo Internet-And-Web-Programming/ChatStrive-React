@@ -62,61 +62,33 @@ module.exports = class Database {
       "'and Password = '" +
       user.Password +
       "')";
+    var result = [];
     this.con.query(fquery, function (err, result) {
+      // Since query is an async function, we need to use callback function to get the result.
+      let response = [];
       if (err) {
         throw err;
       }
       if (result.length == 0) {
+        // ********** if the user is not found
         console.log("User not found");
-        let response = [
-          {
-            Condition: "notfound",
-          },
-        ];
-        return response;
+        response.push({
+          Condition: "notfound",
+        });
       } else {
         //**************************This means User is found
-        console.log("Result is :- ", result);
-        // let enctoken = bcrypt.hashSync(user.username);
-        // Fetching contacts
-        let response = [
-          {
-            Condition: "found",
-          },
-        ];
-        let query1 =
-          "Select connections from Connections WHERE UserID = '" +
-          result[0].UserID +
-          "';"; //************************** Fetching all the contacts of the users.
-        let ans = "";
-        this.con.query(query1, function (err, result2) {
-          if (err) {
-            console.log(err);
-          }
-          if (result2 === undefined) {
-            return response.push("empty");
-          } else {
-            console.log("Result level2 is :- ", result2);
-            // if the result is not empty then the users are found.
-            let users = result2[0].connections.split(",");
-            for (let i = 0; i < users.length; i++) {
-              let query2 =
-                "Select Username from Users WHERE UserID = '" + users[i] + "';";
-              this.con.query(query2, function (err, result2) {
-                if (err) {
-                  console.log(err);
-                } else {
-                  ans += JSON.stringify(result[0]) + ",";
-                }
-              });
-            }
-            ans = ans.substring(0, ans.length - 1);
-            console.log(ans);
-            return response.push(ans);
-          }
+        response.push({
+          Condition: "found",
         });
+        response.push(result[0]);
+        console.log("The Response is... \n\n", response);
       }
+      setResponse(response);
     });
+    function setResponse(response) {
+      result = response;
+    }
+    return result;
   }
   fetch_message(currUser, targetUser) {
     // query where either currUser is sender and targetUser is receiver or vice versa

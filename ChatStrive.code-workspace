@@ -1,10 +1,23 @@
 {
   "folders": [
     {
-      "path": "./"
+      "path": "./server"
     }
   ],
   "settings": {
     "git.ignoreLimitWarning": true
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "pwa-node",
+        "request": "launch",
+        "name": "Launch Program",
+        "skipFiles": ["<node_internals>/**"],
+        "program": "/home/tanmay/Desktop/ChatStrive/server/index.js",
+        "__workspaceFolder": "/home/tanmay/Desktop/ChatStrive/server"
+      }
+    ]
   }
 }
