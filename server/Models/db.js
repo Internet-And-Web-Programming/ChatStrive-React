@@ -63,22 +63,24 @@ module.exports = class Database {
       User.Password +
       "'";
     const response = await this.con.query(fquery, function (err, result) {
+      let ans = [];
       if (err) {
         console.log(err);
       } else {
         if (result.length > 0) {
-          response.push({
+          ans.push({
             Condition: "success",
           });
           console.log("User Found");
-          response.push(result[0]);
+          ans.push(result[0]);
           console.log(result[0]);
         } else {
-          response.push({
+          ans.push({
             Condition: "failure",
           });
         }
       }
+      return ans;
     });
     return response;
   }
