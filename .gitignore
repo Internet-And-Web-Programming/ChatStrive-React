@@ -2,3 +2,4 @@
 Chatstrive.code-workspace
 /server/node_modules
 /client/node_modules
+.vscode
