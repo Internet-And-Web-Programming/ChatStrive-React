@@ -43,7 +43,7 @@ function sign_up(req, res) {
             "' )";
         con.query(fquery, function (err, result) {
             if (err) throw err;
-            console.log("New Insertion : " + userobj);
+            console.log("New Insertion : " + buffer);
             res.writeHead(200, "OK", {
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Origin": "*",
@@ -107,26 +107,38 @@ function fetch_message(req, res) {
     req.on("end", function () {
         buffer += decoder.end();
         var queryobj = JSON.parse(buffer);
-        let fquery =
-            "select * from Messages where (Sender = '" +
-            queryobj.currUser +
-            "' and Receiver = '" +
-            queryobj.targetUser +
-            "') or (Sender = '" +
-            queryobj.targetUser +
-            "' and Receiver = '" +
-            queryobj.currUser +
-            "')";
-        con.query(fquery, function (err, result) {
-            if (err) throw err;
-            // console.log("");
-            res.writeHead(200, "OK", {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-            });
-            res.write(JSON.stringify(result));
-            res.end();
-        });
+        let cquery = "select UserID from Users where(Username='"+queryobj.currUser+"');"
+        let tquery = "select UserID from Users where(Username='"+queryobj.targetUser+"');"
+        con.query(cquery,function(err,resultc){
+            if(err) throw err;
+            con.query(tquery,function(err,resultt){
+                if(err) throw err;
+                resultc = resultc[0].UserID;
+                resultt = resultt[0].UserID;
+                let fquery =
+                "select * from Messages where (Sender = '" +
+                resultc +
+                "' and Receiver = '" +
+                resultt +
+                "') or (Sender = '" +
+                resultt +
+                "' and Receiver = '" +
+                resultc +
+                "')";
+                con.query(fquery, function (err, result) {
+                    if (err) throw err;
+                    // console.log("");
+                    res.writeHead(200, "OK", {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*",
+                    });
+                    res.write(JSON.stringify(result));
+                    res.end();
+                });
+            })
+        })
+        
+        
     });
 }
 
@@ -139,27 +151,38 @@ function new_message(req, res) {
     req.on("end", function () {
         buffer += decoder.end();
         var messageobj = JSON.parse(buffer);
-        let fquery =
-            "insert into Messages(SenderID, ReceiverID, Message) values ('" +
-            messageobj.senderID +
-            "','" +
-            messageobj.recvID +
-            "','" +
-            messageobj.message +
-            "')";
-        con.query(fquery, function (err, result) {
-            if (err) throw err;
-            // create_session()
-            console.log(
-                "New Message: " + messageobj.senderID + " to " + messageobj.recvID
-            );
-            res.writeHead(200, "OK", {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-            });
-            res.write(buffer);
-            res.end();
-        });
+        let cquery = "select UserID from Users where(Username='"+messageobj.currUser+"');"
+        let tquery = "select UserID from Users where(Username='"+messageobj.targetUser+"');"
+        con.query(cquery,function(err,resultc){
+            if(err) throw err;
+            con.query(tquery,function(err,resultt){
+                if(err) throw err;
+                resultc = resultc[0].UserID;
+                resultt = resultt[0].UserID;
+                let fquery =
+                "insert into Messages(SenderID, ReceiverID, Message) values ('" +
+                resultc +
+                "','" +
+                resultt +
+                "','" +
+                messageobj.message +
+                "')";
+                con.query(fquery, function (err, result) {
+                    if (err) throw err;
+                    // console.log("");
+                    res.writeHead(200, "OK", {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*",
+                    });
+                    console.log(
+                        "New Message: " + messageobj.currUser + " to " + messageobj.targetUser
+                    );
+                    res.write(buffer);
+                    res.end();
+                });
+            })
+        })
+        
     });
 }
 
@@ -366,4 +389,4 @@ http
             }
         }
     })
-    .listen(4500, "localhost");
+    .listen(8081, "localhost");
