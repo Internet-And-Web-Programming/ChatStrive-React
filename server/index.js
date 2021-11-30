@@ -23,18 +23,15 @@ io.on("connection", (socket) => {
   // Creating a new user and storing in the database... *****Working well*****
   socket.on("NewRegister", (UserDetails) => {
     console.log(UserDetails);
-    db.sign_up(UserDetails);
+    let result = db.sign_up(UserDetails);
+    console.log("Result is...", result);
   });
   // when the user is entering the chat room than what things should happen...
   socket.on("login", (User) => {
     console.log(User);
-    let userLoading;
-    db.sign_in(User).then((data) => {
-      console.log(data);
-      userLoading = data;
-      console.log("UserLoading is... \n", userLoading);
-      socket.emit("UsersLoading", userLoading);
-    });
+    let userLoading = db.sign_in(User);
+    console.log("UserLoading is... \n", userLoading);
+    socket.emit("UsersLoading", userLoading);
   });
 
   //  When the user is selected then then we have to fetch all the messages from that user.

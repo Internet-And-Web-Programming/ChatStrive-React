@@ -1,29 +1,20 @@
 var http = require("http");
 var url = require("url");
 var strdec = require("string_decoder").StringDecoder;
-var mysql = require("mysql");
+const Mysql = require("sync-mysql");
 var cryptojs = require("crypto-js");
 var bcrypt = require("bcrypt-nodejs");
 var SHA1 = require("crypto-js/sha1");
 var time = require("time");
 module.exports = class Database {
   constructor() {
-    this.con = mysql.createConnection({
+    this.con = new Mysql({
       host: "localhost",
       user: "tanmay",
       password: "tanmayDB",
       database: "ChatStrive",
     });
     this.connected = false;
-    this.con.connect(function (err) {
-      if (err) {
-        console.log("Error connecting to Db\n ", err);
-        this.connected = false;
-      } else {
-        console.log("Connected to Database");
-        this.connected = true;
-      }
-    });
   }
 
   // Adding the new user in the database.
@@ -45,43 +36,34 @@ module.exports = class Database {
       data.Password +
       "' )";
     console.log(fquery);
-    this.con.query(fquery, function (err, result) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("New Insertion : " + data);
-        console.log("New User Added");
-      }
-    });
+    let query = this.con.query(fquery);
+    return query;
   }
   // Checking Logging in.
-  async sign_in(User) {
+  sign_in(User) {
     let fquery =
-      "select * from Users where Username = '" +
+      "SELECT * FROM Users WHERE Username = '" +
       User.Username +
-      "' and Password = '" +
+      "' AND Password = '" +
       User.Password +
-      "'";
-    const response = await this.con.query(fquery, function (err, result) {
-      let ans = [];
-      if (err) {
-        console.log(err);
-      } else {
-        if (result.length > 0) {
-          ans.push({
-            Condition: "success",
-          });
-          console.log("User Found");
-          ans.push(result[0]);
-          console.log(result[0]);
-        } else {
-          ans.push({
-            Condition: "failure",
-          });
-        }
-      }
-      return ans;
-    });
+      "' ;";
+    let response = [];
+    let result = this.con.query(fquery);
+
+    if (result.length === 0) {
+      response.push({
+        status: "NotFound",
+      });
+    } else {
+      response.push({
+        status: "Found",
+      });
+      response.push({
+        UserID: result[0].UserID,
+        Username: result[0].Username,
+        Name: result[0].Name,
+      });
+    }
     return response;
   }
   fetch_message(currUser, targetUser) {

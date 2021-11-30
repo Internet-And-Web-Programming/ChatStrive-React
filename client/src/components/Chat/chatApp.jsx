@@ -1,6 +1,5 @@
 import React from "react";
-import { useEffect } from "react";
-import { User } from "../Register/Register";
+import { useEffect, useState } from "react";
 import "./chatApp.css";
 import Connection from "../SocketConnection/Connection";
 import UserPanel from "./UserPanel";
@@ -10,8 +9,6 @@ import msgHandler from "./msgWindow";
 const usrPanel = new UserPanel();
 const conn = new Connection();
 const msg = new msgHandler();
-
-let currentUser = "";
 
 function askNewUser() {
   document.querySelector(".getContacts").style.display = "flex";
@@ -55,6 +52,11 @@ function Chat() {
       document.querySelector(".textingInput textarea").blur();
     }
   });
+  let [user, setUser] = useState([]);
+  conn.recieve("UserLoading", (data) => {
+    setUser(data);
+  });
+
   // Manages the dynamic height of the textarea
   const manage = (e) => {
     if (e.keyCode === 13) {
@@ -76,6 +78,7 @@ function Chat() {
     }
     e.value = "";
   };
+
   return (
     <>
       <div className="ChattingPage">
@@ -100,7 +103,7 @@ function Chat() {
             <div className="userlogo">
               <img src="https://img.icons8.com/color/48/000000/user" />
             </div>
-            {User[0]}
+            {user[0]}
             <button type="button" onClick={askNewUser}>
               new
             </button>
@@ -111,7 +114,7 @@ function Chat() {
           <div className="initialText">Select a user to start chatting</div>
         </div>
         <div className="messageWindow" style={{ display: "none" }}>
-          <div className="Header">{currentUser}</div>
+          <div className="Header">{user}</div>
           <div className="mainWindow" id="mainWindow"></div>
           <div className="textingInput">
             <textarea
