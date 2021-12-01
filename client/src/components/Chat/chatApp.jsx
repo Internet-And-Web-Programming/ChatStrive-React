@@ -4,11 +4,14 @@ import "./chatApp.css";
 import Connection from "../SocketConnection/Connection";
 import UserPanel from "./UserPanel";
 import msgHandler from "./msgWindow";
-// import { motion } from "framer-motion";
-// import Validate from "../Register/formValidation";
+import { Socket } from "socket.io-client";
+import { UserDetails as User } from "../Register/Register";
+
 const usrPanel = new UserPanel();
 const conn = new Connection();
 const msg = new msgHandler();
+
+console.log("Here are the user detials :-\n", User);
 
 function askNewUser() {
   document.querySelector(".getContacts").style.display = "flex";
@@ -19,6 +22,11 @@ function attempt(event) {
     add_user();
   }
 }
+
+const connection = new Socket("http://localhost:4500");
+connection.on("UserLoading", (socket) => {
+  console.log("connected to :-", socket);
+});
 
 function add_user() {
   document.querySelector(".userList").innerHTML = "";
@@ -54,6 +62,7 @@ function Chat() {
   });
   let [user, setUser] = useState([]);
   conn.recieve("UserLoading", (data) => {
+    console.log("Here in chatapp.jsx\t\t", data);
     setUser(data);
   });
 

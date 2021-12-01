@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Connection from "../SocketConnection/Connection";
 import ReactMarkdown from "react-markdown";
 import ReactDOM from "react-dom";
-import { User } from "../Register/Register";
+import { UserDetails } from "../Register/Register";
 export class msgHandler extends Component {
   constructor() {
     let conn = new Connection();
@@ -33,7 +33,7 @@ export class msgHandler extends Component {
       // Message sending
       let currentTime = new Date();
       let time = currentTime.getHours() + ":" + currentTime.getMinutes();
-      let sender = User[0];
+      let sender = UserDetails[0];
       let reciever = document.querySelector(".messageWindow .Header").innerHTML;
       let msgObj = {
         sender: sender,
@@ -42,7 +42,7 @@ export class msgHandler extends Component {
         reciever: reciever,
       };
       console.log(msgObj);
-      this.conn.emit("send", { msgObj });
+      this.conn.emit("newMsg", { msgObj });
       this.add_sendMessage(msg);
     }
     document.querySelector(".textingInput textarea").value = "";

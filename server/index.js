@@ -22,9 +22,8 @@ const users = [{}];
 const port = 4500;
 const server = http.createServer(app);
 
-app.use(cors());
-
 io.on("connection", (socket) => {
+  console.log("New User Detected!!");
   // Creating a new user and storing in the database... *****Working well*****
   socket.on("NewRegister", (UserDetails) => {
     console.log(UserDetails);
@@ -37,6 +36,9 @@ io.on("connection", (socket) => {
     let userLoading = db.sign_in(User);
     console.log("UserLoading is... \n", userLoading);
     socket.emit("UsersLoading", userLoading);
+    socket.on("Cookies", (Cookies) => {
+      console.log("Cookies are...", Cookies);
+    });
   });
 
   //  When the user is selected then then we have to fetch all the messages from that user.
@@ -48,8 +50,9 @@ io.on("connection", (socket) => {
     socket.emit("messages", loadMsgs);
   });
   // When the user is typing a new message.
-  socket.on("newMsg", (currUser, targetUser, Msg) => {
-    db.new_message(currUser, targetUser, Msg);
+  socket.on("newMsg", (Msg) => {
+    // db.new_message(currUser, targetUser, Msg);
+    console.log("New message is...\n", Msg);
   });
   // Constantly checking the new messages of a particular user.
   async function checkNewMsg(currUser) {

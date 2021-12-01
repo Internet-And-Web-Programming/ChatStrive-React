@@ -3,7 +3,6 @@ import Nav from "../Navigation/NavBar";
 import Validate from "./formValidation";
 import components from "./components";
 import "./reg.css";
-import { Link } from "react-router-dom";
 import { Connection } from "../SocketConnection/Connection";
 import SHA1 from "crypto-js/sha1";
 
@@ -15,7 +14,7 @@ class ElementList {
     this.link = link;
   }
 }
-let User = {};
+let UserDetails = [];
 // List of elements to be displayed in the nav bar
 const navBarElements = [
   new ElementList("Home", "/"),
@@ -25,19 +24,29 @@ const navBarElements = [
 
 // Main function of this file
 function Register() {
-  console.clear();
   let User = {};
-  const Login = () => {
+  const Login = (event) => {
     var forms = document.forms[0].elements;
-
-    for (var i = 0; i < forms.length - 1; i++) {
+    for (var i = 0; i < forms.length; i++) {
       User[forms[i].name] = forms[i].value;
       if (forms[i].name === "Password") {
+        // console.log("Password :", forms[i].value);
         User[forms[i].name] = SHA1(forms[i].value).toString();
       }
     }
-    console.log(User);
+    console.log("User is :- ", User);
     conn.emit("login", User);
+    conn.recieve("UsersLoading", (data) => {
+      console.log(data);
+      if (data[0].status === "NotFound") {
+        alert("User not found");
+        console.log("User not found");
+        event.preventDefault();
+      } else {
+        UserDetails = data[1];
+        window.location.href = "/Chat";
+      }
+    });
   };
   const [name, changeName] = useState("");
   function handleChange(e) {
@@ -63,12 +72,11 @@ function Register() {
                 />
               </div>
             ))}
-            <div className="bg">
-              <button onClick={Login}>
-                <Link to="/Chat">Login</Link>
-              </button>
-            </div>
           </form>
+          <div className="bg">
+            <button onClick={Login}>Login</button>
+          </div>
+
           <p>{name}</p>
         </div>
       </div>
@@ -104,4 +112,4 @@ const style2 = {
 };
 
 export default Register;
-export { User };
+export { UserDetails };
