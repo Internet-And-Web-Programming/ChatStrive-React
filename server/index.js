@@ -4,7 +4,12 @@
 const http = require("http");
 const express = require("express");
 const cors = require("cors");
-const socketIO = require("socket.io");
+const io = require("socket.io")(4500, {
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+console.log("Socket is running on port 4500");
 const app = express();
 var Database = require("./Models/db");
 
@@ -16,7 +21,7 @@ app.get("/", (req, res) => {
 const users = [{}];
 const port = 4500;
 const server = http.createServer(app);
-const io = socketIO(server);
+
 app.use(cors());
 
 io.on("connection", (socket) => {
@@ -56,8 +61,4 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });
-});
-
-server.listen(port, () => {
-  console.log(`Listening on port http://localhost:${port}`);
 });
