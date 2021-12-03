@@ -37,6 +37,13 @@ module.exports = class Database {
       "' )";
     console.log(fquery);
     let query = this.con.query(fquery);
+    //  Adding this user details in the Connections table.
+    let fquery2 =
+      "INSERT INTO Connections (UserID, connections) VALUES ('" +
+      userID +
+      "', '')";
+    this.con.query(fquery2);
+    console.log("Added user in Connections and Users table.");
     return query;
   }
   // Checking Logging in.
