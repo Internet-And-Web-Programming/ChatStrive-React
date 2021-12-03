@@ -14,27 +14,32 @@ export class UserPanel extends Component {
         lastMessageTime: "0",
       },
     };
-    this.conn = new Connection();
+    let conn = new Connection();
+    this.conn = conn;
   }
-  addUser = (user) => {
-    this.state.tempUser = {
-      name: user.name,
-      id: user.id,
-      lastActive: "",
-      lastMessage: "",
-      lastMessageTime: "0",
-    };
-    let newUsr = document.createElement("button");
-    newUsr.classList.add("user");
-    newUsr.id = user.id;
-    // newUsr.onclick = this.open(user.id);
-    newUsr.addEventListener("click", () => {
-      this.open(user.id);
+  addUser = (data) => {
+    let [UserID, username] = data;
+    let targetUser = [];
+    console.log("UserID is : -", UserID);
+    console.log("username is : -", username);
+    // We now have to find the users inside the existing table.
+    this.conn.emit("Check_&_Add", data);
+    this.conn.recieve("Check_&_Add", (data) => {
+      //  We are fetching 3 things i.e UserID, Username, Name;
+      if (data !== null) {
+        let targetUserID = data.UserID;
+        let targetName = data.Name;
+        let targetUsername = data.Username;
+        targetUser = [targetUserID, targetName, targetUsername];
+        console.log("targetUser is : -", targetUser);
+        let packet = [UserID, targetUserID];
+        this.conn.emit("addUser", packet);
+        this.conn.recieve("addUser", (packet) => {});
+      } else {
+        alert("User does not exist");
+        console.log("This Username doesn't exists");
+      }
     });
-    newUsr.innerHTML = `${user.name}`;
-    this.state.userList.push(newUsr);
-    this.setState({ userList: this.state.userList });
-    return this.state.userList;
   };
   updateUser = (user) => {
     // finding the user in the user list

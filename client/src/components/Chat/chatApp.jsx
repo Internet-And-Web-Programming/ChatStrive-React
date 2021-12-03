@@ -15,33 +15,12 @@ function askNewUser() {
   document.querySelector(".getContacts").style.display = "flex";
   document.querySelector(".getContacts input").focus();
 }
-function attempt(event) {
-  if (event.keyCode === 13) {
-    add_user();
-  }
-}
 
 const connection = new Socket("http://localhost:4500");
 connection.on("UserLoading", (socket) => {
   console.log("connected to :-", socket);
 });
 
-function add_user() {
-  document.querySelector(".userList").innerHTML = "";
-  let user = {
-    name: document.querySelector(".getContacts input").value,
-    id: document.querySelector(".getContacts input").value,
-  };
-  // Trimming the user.name
-  if (user.name.trim() !== "") {
-    let arr = usrPanel.addUser(user);
-    for (let i = 1; i <= arr.length; i++) {
-      document.querySelector(".userList").appendChild(arr[arr.length - i]);
-    }
-  }
-  document.querySelector(".getContacts input").value = "";
-  document.querySelector(".getContacts").style.display = "none";
-}
 function Chat() {
   const location = useLocation();
   let [user, setUser] = useState([]);
@@ -49,7 +28,7 @@ function Chat() {
   if (location.state.info === undefined) {
     return <Redirect to="/Register" />;
   }
-  var User = location.state.info[0];
+  const User = location.state.info[0];
   document.addEventListener("keydown", (event) => {
     if (event.altKey && event.keyCode === 78) {
       askNewUser();
@@ -63,10 +42,30 @@ function Chat() {
     }
   });
 
+  let addUser = () => {
+    document.querySelector(".userList").innerHTML = "";
+    let id = User.UserID;
+    let username = document.querySelector(".getContacts input").value.trim();
+    if (username !== "") {
+      let data = [];
+      data.push(id);
+      data.push(username);
+      usrPanel.addUser(data);
+    }
+    document.querySelector(".getContacts input").value = "";
+    document.querySelector(".getContacts").style.display = "none";
+  };
+
   conn.recieve("UserLoading", (data) => {
     console.log("Here in chatapp.jsx\t\t", data);
     setUser(data);
   });
+
+  function attempt(event) {
+    if (event.keyCode === 13) {
+      addUser();
+    }
+  }
 
   // Manages the dynamic height of the textarea
   const manage = (e) => {
@@ -97,9 +96,9 @@ function Chat() {
           <label>
             <b>Username of the User</b>
           </label>
-          <input type="text" placeholder="Enter UserName" onKeyDown={attempt} />
+          <input type="text" placeholder="Enter Username" onKeyDown={attempt} />
           <div className="bg">
-            <button onClick={add_user}>Add</button>
+            <button onClick={addUser}>Add</button>
             <button
               onClick={() => {
                 document.querySelector(".getContacts").style.display = "none";

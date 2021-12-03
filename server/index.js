@@ -40,7 +40,22 @@ io.on("connection", (socket) => {
       console.log("Cookies are...", Cookies);
     });
   });
-
+  socket.on("Check_&_Add", (data) => {
+    let [currUserID, targetUsername] = data;
+    console.log("CheckUser is...", targetUsername);
+    let user = db.check_user(targetUsername);
+    if (user !== null) {
+      TargetUserID = user.UserID;
+      let result = db.add_user(currUserID, TargetUserID);
+      socket.emit("Check_&_Add", result);
+    } else {
+      socket.emit("Check_&_Add", user);
+    }
+  });
+  socket.on("AddUser", (data) => {
+    let [currUserID, TargetUserID] = data;
+    console.log("Adding the users :-", currUserID, "and \n", TargetUserID);
+  });
   //  When the user is selected then then we have to fetch all the messages from that user.
   socket.on("click", (currUser, targetUser) => {
     let loadMsgs = db.fetch_message(currUser, targetUser);

@@ -66,6 +66,69 @@ module.exports = class Database {
     }
     return response;
   }
+  check_user(username) {
+    let query =
+      "select UserID, Name ,Username from Users where Username = '" +
+      username +
+      "'";
+    let results = this.con.query(query)[0];
+    return results;
+  }
+  add_user(UserID1, UserID2) {
+    let query1 =
+      "SELECT connections FROM Connections WHERE UserID = '" + UserID1 + "'";
+    let result1 = this.con.query(query1)[0];
+    if (result1.connections === "") {
+      result1.connections += UserID2;
+    } else {
+      let x = false;
+      let IDs = result2.connections.split(",");
+      for (let i = 0; i < IDs.length; i++) {
+        if (IDs[i] === UserID2) {
+          x = true;
+          break;
+        }
+      }
+      if (x === false) {
+        result1.connections += ", " + UserID2;
+      }
+    }
+    let newQuery1 =
+      'UPDATE Connections SET connections = "' +
+      result1.connections +
+      '" WHERE UserID = "' +
+      UserID1 +
+      '"';
+    let response1 = this.con.query(newQuery1);
+    let query2 =
+      "SELECT connections FROM Connections WHERE UserID = '" + UserID2 + "'";
+    let result2 = this.con.query(query2)[0];
+    if (result2.connections === "") {
+      result2.connections += UserID1;
+    } else {
+      let x = false;
+      let IDs = result2.connections.split(",");
+      for (let i = 0; i < IDs.length; i++) {
+        if (IDs[i] === UserID1) {
+          x = true;
+          break;
+        }
+      }
+      if (x === false) {
+        result2.connections += ", " + UserID1;
+      }
+    }
+    let newQuery2 =
+      'UPDATE Connections SET connections = "' +
+      result2.connections +
+      '" WHERE UserID = "' +
+      UserID2 +
+      '"';
+    let response2 = this.con.query(newQuery2);
+    let finalResponse = [response1, response2];
+    console.log(finalResponse);
+    return result1;
+  }
   fetch_message(currUser, targetUser) {
     // query where either currUser is sender and targetUser is receiver or vice versa
     let response = [];
