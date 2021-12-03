@@ -3,6 +3,14 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+// import { createStore } from "redux";
+// STORE -> Globalized state.
+
+// ACTION -> Changing the state.
+
+// REDUCER -> How the action transform to the next state.
+
+// DISPATCH -> execute our action and pass it to the reducer.
 
 ReactDOM.render(
   <React.StrictMode>

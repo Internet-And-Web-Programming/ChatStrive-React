@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import Connection from "../SocketConnection/Connection";
 import ReactMarkdown from "react-markdown";
 import ReactDOM from "react-dom";
-import { UserDetails } from "../Register/Register";
+// import { UserDetails } from "../Register/Register";
+let UserDetails = [];
 export class msgHandler extends Component {
   constructor() {
     let conn = new Connection();

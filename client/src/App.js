@@ -34,7 +34,7 @@ function App() {
           <Router>
             <Route exact path="/" component={Home} />
             <Route exact path="/Register" component={Register} />
-            <Route exact path="/chat" component={Chat} />
+            <Route exact path="/chat" component={() => <Chat status={[]} />} />
             <Route exact path="/NewRegister" component={NewRegister} />
             <Route exact path="/ContactUs" component={ContactUs} />
           </Router>

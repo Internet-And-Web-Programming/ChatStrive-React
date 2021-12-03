@@ -1,17 +1,15 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { Redirect } from "react-router";
+import { useState } from "react";
 import "./chatApp.css";
 import Connection from "../SocketConnection/Connection";
 import UserPanel from "./UserPanel";
 import msgHandler from "./msgWindow";
 import { Socket } from "socket.io-client";
-import { UserDetails as User } from "../Register/Register";
-
+import { useLocation } from "react-router-dom";
 const usrPanel = new UserPanel();
 const conn = new Connection();
 const msg = new msgHandler();
-
-console.log("Here are the user detials :-\n", User);
 
 function askNewUser() {
   document.querySelector(".getContacts").style.display = "flex";
@@ -45,9 +43,13 @@ function add_user() {
   document.querySelector(".getContacts").style.display = "none";
 }
 function Chat() {
-  useEffect(() => {
-    conn.on();
-  }, []); //conn.self
+  const location = useLocation();
+  let [user, setUser] = useState([]);
+  console.log(location.state.info[0]);
+  if (location.state.info === undefined) {
+    return <Redirect to="/Register" />;
+  }
+  var User = location.state.info[0];
   document.addEventListener("keydown", (event) => {
     if (event.altKey && event.keyCode === 78) {
       askNewUser();
@@ -60,7 +62,7 @@ function Chat() {
       document.querySelector(".textingInput textarea").blur();
     }
   });
-  let [user, setUser] = useState([]);
+
   conn.recieve("UserLoading", (data) => {
     console.log("Here in chatapp.jsx\t\t", data);
     setUser(data);
@@ -112,7 +114,7 @@ function Chat() {
             <div className="userlogo">
               <img src="https://img.icons8.com/color/48/000000/user" />
             </div>
-            {user[0]}
+            {User["Name"]}
             <button type="button" onClick={askNewUser}>
               new
             </button>

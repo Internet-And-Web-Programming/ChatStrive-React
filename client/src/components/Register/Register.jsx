@@ -4,17 +4,16 @@ import Validate from "./formValidation";
 import components from "./components";
 import "./reg.css";
 import { Connection } from "../SocketConnection/Connection";
+import { useHistory } from "react-router-dom";
 import SHA1 from "crypto-js/sha1";
-
 const conn = new Connection();
-
 class ElementList {
   constructor(name, link) {
     this.name = name;
     this.link = link;
   }
 }
-let UserDetails = [];
+var UserDetails = [];
 // List of elements to be displayed in the nav bar
 const navBarElements = [
   new ElementList("Home", "/"),
@@ -24,13 +23,14 @@ const navBarElements = [
 
 // Main function of this file
 function Register() {
-  let User = {};
-  const Login = (event) => {
+  let history = useHistory();
+  const login = () => {
+    let state = [];
+    let User = {};
     var forms = document.forms[0].elements;
     for (var i = 0; i < forms.length; i++) {
       User[forms[i].name] = forms[i].value;
       if (forms[i].name === "Password") {
-        // console.log("Password :", forms[i].value);
         User[forms[i].name] = SHA1(forms[i].value).toString();
       }
     }
@@ -41,10 +41,10 @@ function Register() {
       if (data[0].status === "NotFound") {
         alert("User not found");
         console.log("User not found");
-        event.preventDefault();
       } else {
-        UserDetails = data[1];
-        window.location.href = "/Chat";
+        state.push(data[1]);
+        console.log("UserDetails are :- ", state);
+        history.push("/Chat", { info: state });
       }
     });
   };
@@ -74,7 +74,7 @@ function Register() {
             ))}
           </form>
           <div className="bg">
-            <button onClick={Login}>Login</button>
+            <button onClick={login}>Login</button>
           </div>
 
           <p>{name}</p>
