@@ -36,6 +36,8 @@ export class UserPanel extends Component {
     });
   };
   loadUsers = (UserID) => {
+    // Need to work upon loading user
+    // I have to fetch a list of users of dictionaries with Username, UserID and Name;
     console.log("in loadUsers function");
     this.conn.emit("loadUsers", UserID);
     this.conn.recieve("loadUsers", (data) => {
