@@ -27,20 +27,24 @@ export class UserPanel extends Component {
     this.conn.recieve("Check_&_Add", (data) => {
       //  We are fetching 3 things i.e UserID, Username, Name;
       if (data !== null) {
-        let targetUserID = data.UserID;
-        let targetName = data.Name;
-        let targetUsername = data.Username;
-        targetUser = [targetUserID, targetName, targetUsername];
-        console.log("targetUser is : -", targetUser);
-        let packet = [UserID, targetUserID];
-        this.conn.emit("addUser", packet);
-        this.conn.recieve("addUser", (packet) => {});
+        console.log(data);
+        this.loadUsers(UserID);
       } else {
-        alert("User does not exist");
         console.log("This Username doesn't exists");
+        return null;
       }
     });
   };
+  loadUsers = (UserID) => {
+    console.log("in loadUsers function");
+    this.conn.emit("loadUsers", UserID);
+    this.conn.recieve("loadUsers", (data) => {
+      this.setState({
+        userList: data,
+      });
+    });
+  };
+
   updateUser = (user) => {
     // finding the user in the user list
     let userIndex = this.state.userList.findIndex((usr) => usr.id === user.id);

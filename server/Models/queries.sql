@@ -14,7 +14,6 @@ create table if not exists Users (
 -- To get all the users that are connected to that particular user
 create table if not exists Connections (
   UserID varchar(255) not null,
-  Username varchar(255) not null,
   connections varchar(5000) not null,
   FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
@@ -48,11 +47,17 @@ create table if not exists Sessions (
 -- Working Well.
 
 -- Sample Insertion
-INSERT INTO Users (UserID, Name, Username, Password) 
-            VALUES ('1', 'John', 'John', 'John'),
-            ('2', 'Jane', 'Jane', 'Jane'),
-            ('3', 'Jack', 'Jack', 'Jack'),
-            ('4', 'Jill', 'Jill', 'Jill'),
-            ('5', 'Joe', 'Joe', 'Joe'),
-            ('6', 'Jenny', 'Jenny', 'Jenny'),
-            ('7', 'Rishubh', 'Rishubh', 'Rishubh');
+
+-- To Delete them back.
+Delete from Connections;
+Delete from Users;
+
+insert into Users (UserID, Name, Username, Password) values ('1000', 'DummyA', 'DummyA', 'fdd15c1d273d01055c87aa9f598cf264c456eacd');
+insert into Users (UserID, Name, Username, Password) values ('2000', 'DummyB', 'DummyB', 'fdd15c1d273d01055c87aa9f598cf264c456eacd');
+insert into Users (UserID, Name, Username, Password) values ('3000', 'DummyC', 'DummyC', 'fdd15c1d273d01055c87aa9f598cf264c456eacd');
+insert into Connections (UserID, connections) values ('1000', '');
+insert into Connections (UserID, connections) values ('2000', '');
+insert into Connections (UserID, connections) values ('3000', '');
+
+
+-- Adding Dummies; All the passwords are Tanmay1!

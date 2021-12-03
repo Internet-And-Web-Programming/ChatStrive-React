@@ -89,7 +89,7 @@ module.exports = class Database {
       result1.connections += UserID2;
     } else {
       let x = false;
-      let IDs = result2.connections.split(",");
+      let IDs = result1.connections.split(",");
       for (let i = 0; i < IDs.length; i++) {
         if (IDs[i] === UserID2) {
           x = true;
@@ -134,8 +134,24 @@ module.exports = class Database {
     let response2 = this.con.query(newQuery2);
     let finalResponse = [response1, response2];
     console.log(finalResponse);
-    return result1;
+    return finalResponse;
   }
+
+  load_users(UserID) {
+    let query1 =
+      "SELECT connections FROM Connections WHERE UserID = '" + UserID + "'";
+    let result1 = this.con.query(query1)[0].connections.split(",");
+    console.log(result1);
+    let response = [];
+    // let result = result1.split(",");
+    for (let i = 0; i < result1.length; i++) {
+      let query2 = "SELECT * FROM Users WHERE UserID = '" + result1[i] + "'";
+      let result2 = this.con.query(query2)[0];
+      response.push(result2);
+    }
+    return response;
+  }
+
   fetch_message(currUser, targetUser) {
     // query where either currUser is sender and targetUser is receiver or vice versa
     let response = [];

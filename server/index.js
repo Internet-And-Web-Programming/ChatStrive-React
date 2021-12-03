@@ -44,25 +44,22 @@ io.on("connection", (socket) => {
     let [currUserID, targetUsername] = data;
     console.log("CheckUser is...", targetUsername);
     let user = db.check_user(targetUsername);
-    if (user !== null) {
+    console.log("User is... :", user);
+    if (user !== undefined && user.UserID !== currUserID) {
       TargetUserID = user.UserID;
       let result = db.add_user(currUserID, TargetUserID);
-      socket.emit("Check_&_Add", result);
-    } else {
       socket.emit("Check_&_Add", user);
+    } else {
+      socket.emit("Check_&_Add", null);
     }
   });
-  socket.on("AddUser", (data) => {
-    let [currUserID, TargetUserID] = data;
-    console.log("Adding the users :-", currUserID, "and \n", TargetUserID);
-  });
+
   //  When the user is selected then then we have to fetch all the messages from that user.
-  socket.on("click", (currUser, targetUser) => {
-    let loadMsgs = db.fetch_message(currUser, targetUser);
-    if (!loadMsgs) {
-      loadMsgs = { error: "Not able to fetch messages" };
-    }
-    socket.emit("messages", loadMsgs);
+  socket.on("loadUsers", (UserID) => {
+    console.log("UserID is...", UserID);
+    let result = db.load_users(UserID);
+    console.log("Result is...", result);
+    socket.emit("loadUsers", result);
   });
   // When the user is typing a new message.
   socket.on("newMsg", (Msg) => {
@@ -80,3 +77,10 @@ io.on("connection", (socket) => {
     console.log("user disconnected");
   });
 });
+
+/*
+fuser -k 4500/tcp 
+clear 
+npm start
+
+*/
