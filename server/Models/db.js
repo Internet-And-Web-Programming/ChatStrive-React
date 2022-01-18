@@ -5,7 +5,6 @@ const Mysql = require("sync-mysql");
 var cryptojs = require("crypto-js");
 var bcrypt = require("bcrypt-nodejs");
 var SHA1 = require("crypto-js/sha1");
-var time = require("time");
 module.exports = class Database {
   constructor() {
     this.con = new Mysql({
@@ -167,8 +166,7 @@ module.exports = class Database {
         "','" +
         userobj.User2 +
         "','" +
-        cryptojs.SHA256(userobj.User1 + userobj.User2 + time.now()).toString() +
-        "')";
+        cryptojs.SHA256(userobj.User1 + userobj.User2);
       this.con.query(fquery, function (err, result) {
         if (err) {
           if (err.code == "ER_DUP_ENTRY") {
