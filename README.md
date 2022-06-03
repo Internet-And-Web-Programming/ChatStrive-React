@@ -1,2 +1,2 @@
 # ChatStrive-React
-This is going to be our actual project
+This project is not completed yet
